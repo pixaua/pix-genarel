@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pix General - Premium App & Game Hub</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #080b12;
+            --card-bg: #121824;
+            --accent-color: #00f2fe;
+            --accent-gradient: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            --text-main: #ffffff;
+            --text-sub: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --card-hover: rgba(0, 210, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphic Navbar */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(8, 11, 18, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 42px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #00d2ff;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-sub);
+        }
+
+        /* Hero Banner with Cover Photo */
+        .hero {
+            padding: 80px 8% 60px;
+            text-align: center;
+            /* আপনার কভার ফটোর ইউআরএল নিচে 'cover-photo.jpg' তুলে বসিয়ে দিতে পারেন */
+            background: linear-gradient(180deg, rgba(8, 11, 18, 0.7) 0%, #080b12 100%), 
+                        url('cover-photo.jpg') center/cover no-repeat;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 44px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-sub);
+            font-size: 16px;
+            max-width: 650px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        /* Category Filter Pills */
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            padding: 0 8%;
+        }
+
+        .cat-btn {
+            padding: 10px 22px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-sub);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cat-btn:hover, .cat-btn.active {
+            background: var(--accent-gradient);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 5px 20px rgba(0, 210, 255, 0.3);
+        }
+
+        /* App Grid Section */
+        .app-grid-section {
+            padding: 0 8% 80px;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* App Card Style */
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 210, 255, 0.4);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--card-hover);
+        }
+
+        .card-top {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .app-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 16px;
+            object-fit: cover;
+            background: #1e293b;
+        }
+
+        .app-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .app-info .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            background: rgba(0, 210, 255, 0.15);
+            color: #00d2ff;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        .app-desc {
+            font-size: 13px;
+            color: var(--text-sub);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-download {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .app-card:hover .btn-download {
+            background: var(--accent-gradient);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 30px 8%;
+            text-align: center;
+            background: #05070d;
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <a href="#" class="logo">
+            <i class="fa-solid fa-bolt-lightning" style="color: #00d2ff;"></i> Pix <span>General</span>
+        </a>
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search apps, games, mods..." onkeyup="filterApps()">
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="hero">
+        <h1>Welcome to <span>Pix General</span></h1>
+        <p>Your ultimate hub for 100% free premium apps, ad-free music streaming, and offline games. Direct downloads without annoying ads or shortlinks.</p>
+    </section>
+
+    <!-- Category Filter Bar -->
+    <div class="categories">
+        <button class="cat-btn active" onclick="filterCategory('all')"><i class="fa-solid fa-border-all"></i> All Files</button>
+        <button class="cat-btn" onclick="filterCategory('music')"><i class="fa-solid fa-music"></i> Music</button>
+        <button class="cat-btn" onclick="filterCategory('games')"><i class="fa-solid fa-gamepad"></i> Offline Games</button>
+        <button class="cat-btn" onclick="filterCategory('premium')"><i class="fa-solid fa-crown"></i> Premium Mods</button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="app-grid-section">
+        <div class="section-title">
+            <i class="fa-solid fa-fire" style="color: #ff4757;"></i> Featured Releases
+        </div>
+
+        <div class="grid" id="appGrid">
+            
+            <!-- Item 1: Music Player -->
+            <div class="app-card" data-category="music" data-title="pix music player spotify ad-free stream">
+                <div>
+                    <div class="card-top">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3844/3844720.png" class="app-icon" alt="App Icon">
+                        <div class="app-info">
+                            <h3>Pix Music</h3>
+                            <span class="badge">Ad-Free • Stream</span>
+                            <div class="meta-info">
+                                <span><i class="fa-solid fa-star" style="color:#f1c40f;"></i> 5.0</span>
+                                <span>v1.0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="app-desc">Listen to latest songs without any advertisements. High quality audio streaming.</p>
+                </div>
+                <a href="#" class="btn-download"><i class="fa-solid fa-download"></i> Download APK</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Pix General. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function filterCategory(category) {
+            const buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            const cards = document.querySelectorAll('.app-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterApps() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.app-card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                if (title.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
