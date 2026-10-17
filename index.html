@@ -97,18 +97,16 @@
             color: var(--text-sub);
         }
 
-        /* Hero Banner with Cover Photo */
+        /* Hero Banner */
         .hero {
-            padding: 80px 8% 60px;
+            padding: 70px 8% 50px;
             text-align: center;
-            /* আপনার কভার ফটোর ইউআরএল নিচে 'cover-photo.jpg' তুলে বসিয়ে দিতে পারেন */
-            background: linear-gradient(180deg, rgba(8, 11, 18, 0.7) 0%, #080b12 100%), 
-                        url('cover-photo.jpg') center/cover no-repeat;
+            background: radial-gradient(circle at 50% 20%, rgba(0, 210, 255, 0.08) 0%, transparent 60%);
             position: relative;
         }
 
         .hero h1 {
-            font-size: 44px;
+            font-size: 42px;
             font-weight: 800;
             margin-bottom: 15px;
             line-height: 1.2;
@@ -321,9 +319,10 @@
         <button class="cat-btn" onclick="filterCategory('music')"><i class="fa-solid fa-music"></i> Music</button>
         <button class="cat-btn" onclick="filterCategory('games')"><i class="fa-solid fa-gamepad"></i> Offline Games</button>
         <button class="cat-btn" onclick="filterCategory('premium')"><i class="fa-solid fa-crown"></i> Premium Mods</button>
+        <button class="cat-btn" onclick="filterCategory('tools')"><i class="fa-solid fa-wrench"></i> Utilities</button>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content Grid -->
     <main class="app-grid-section">
         <div class="section-title">
             <i class="fa-solid fa-fire" style="color: #ff4757;"></i> Featured Releases
@@ -331,7 +330,28 @@
 
         <div class="grid" id="appGrid">
             
-            <!-- Item 1: Music Player -->
+            <!-- App Card 1: 1.1.1.1 VPN WARP+ Premium -->
+            <div class="app-card" data-category="premium tools" data-title="1.1.1.1 vpn warp premium unlimited internet cloudflare">
+                <div>
+                    <div class="card-top">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2092/2092663.png" class="app-icon" alt="VPN Icon">
+                        <div class="app-info">
+                            <h3>1.1.1.1 VPN WARP+</h3>
+                            <span class="badge">Premium • Unlimited</span>
+                            <div class="meta-info">
+                                <span><i class="fa-solid fa-star" style="color:#f1c40f;"></i> 4.9</span>
+                                <span>v6.38.9</span>
+                                <span>31 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="app-desc">Faster & safer internet with WARP+ Unlimited bandwidth. Premium version unlocked with zero ads.</p>
+                </div>
+                <!-- Direct Link to your GitHub Release File -->
+                <a href="https://github.com/pixaua/pix-genarel/releases/download/V1/1.1.1.1.VPN.v6.38.9.Unlimited.Warp.apk" class="btn-download"><i class="fa-solid fa-download"></i> Download APK</a>
+            </div>
+
+            <!-- App Card 2: Pix Music (Placeholder) -->
             <div class="app-card" data-category="music" data-title="pix music player spotify ad-free stream">
                 <div>
                     <div class="card-top">
@@ -347,7 +367,7 @@
                     </div>
                     <p class="app-desc">Listen to latest songs without any advertisements. High quality audio streaming.</p>
                 </div>
-                <a href="#" class="btn-download"><i class="fa-solid fa-download"></i> Download APK</a>
+                <a href="#" class="btn-download"><i class="fa-solid fa-download"></i> Coming Soon</a>
             </div>
 
         </div>
@@ -358,6 +378,7 @@
         <p>&copy; 2026 Pix General. All Rights Reserved.</p>
     </footer>
 
+    <!-- Filter & Search Logic -->
     <script>
         function filterCategory(category) {
             const buttons = document.querySelectorAll('.cat-btn');
@@ -366,7 +387,8 @@
 
             const cards = document.querySelectorAll('.app-card');
             cards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
+                const itemCategory = card.getAttribute('data-category');
+                if (category === 'all' || itemCategory.includes(category)) {
                     card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
