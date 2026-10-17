@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pix General — Next-Gen App Hub & Music Streamer</title>
+    <title>Pix General — Premium Web Music & App Hub</title>
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,6 +13,7 @@
         :root {
             --bg-dark: #07090e;
             --card-bg: rgba(18, 24, 38, 0.65);
+            --sidebar-bg: #0d131f;
             --accent-cyan: #00f2fe;
             --accent-blue: #4facfe;
             --text-primary: #f8fafc;
@@ -40,7 +41,7 @@
             padding-bottom: 90px;
         }
 
-        /* Top Bar Navigation */
+        /* Header Navigation */
         header {
             position: sticky;
             top: 0;
@@ -48,16 +49,35 @@
             background: rgba(7, 9, 14, 0.85);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-subtle);
-            padding: 18px 8%;
+            padding: 16px 6%;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .menu-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .menu-toggle-btn:hover {
+            color: var(--accent-cyan);
+        }
+
         .brand-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             font-size: 22px;
             font-weight: 800;
             letter-spacing: -0.5px;
@@ -76,46 +96,136 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .contact-link {
-            color: var(--text-secondary);
+        /* Top Right Support Button */
+        .support-btn-top {
+            color: var(--text-primary);
             text-decoration: none;
             font-size: 13px;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-subtle);
+            padding: 8px 18px;
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid var(--border-glow);
             border-radius: 30px;
             transition: all 0.3s ease;
         }
 
-        .contact-link:hover {
-            color: var(--text-primary);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+        .support-btn-top:hover {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #07090e;
+            border-color: transparent;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
         }
 
-        /* Main Showcase Banner */
-        .hero-section {
-            padding: 60px 8% 30px;
+        /* Sliding Left Sidebar (For Apps) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-subtle);
+            z-index: 3000;
+            padding: 25px 20px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 15px;
+        }
+
+        .sidebar-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .close-sidebar-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .sidebar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar-card h4 {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .sidebar-card p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .sidebar-btn {
+            display: block;
+            width: 100%;
+            padding: 8px;
             text-align: center;
-            background: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.07) 0%, transparent 60%);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--border-subtle);
+            transition: 0.2s;
+        }
+
+        .sidebar-btn:hover {
+            background: var(--accent-cyan);
+            color: #000;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2500;
+            display: none;
+            backdrop-filter: blur(4px);
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Hero Banner */
+        .hero-section {
+            padding: 40px 6% 20px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.08) 0%, transparent 60%);
         }
 
         .hero-section h1 {
-            font-size: 38px;
+            font-size: 32px;
             font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 12px;
-            line-height: 1.25;
+            margin-bottom: 10px;
         }
 
         .hero-section h1 span {
@@ -124,84 +234,9 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .hero-section p {
-            color: var(--text-secondary);
-            font-size: 15px;
-            max-width: 580px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        /* Search Bar & Filters */
-        .controls-area {
-            padding: 20px 8% 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .search-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-        }
-
-        .search-wrapper input {
-            width: 100%;
-            padding: 14px 20px 14px 48px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 40px;
-            color: #fff;
-            outline: none;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
-        .search-wrapper input:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
-        }
-
-        .search-wrapper i {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .tab-btn {
-            padding: 8px 20px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-secondary);
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn:hover, .tab-btn.active {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            color: #07090e;
-            font-weight: 700;
-            border-color: transparent;
-            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.25);
-        }
-
-        /* Dashboard Grid Layout */
-        .dashboard-container {
-            padding: 0 8% 40px;
+        /* Music Showcase Grid (Homepage) */
+        .music-container {
+            padding: 20px 6% 40px;
         }
 
         .section-header {
@@ -211,114 +246,95 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            color: var(--text-primary);
         }
 
-        .content-grid {
+        .music-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 22px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
         }
 
-        /* Sleek Cards */
-        .feature-card {
+        .song-card {
             background: var(--card-bg);
             border: 1px solid var(--border-subtle);
-            border-radius: 20px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
-        .feature-card:hover {
+        .song-card:hover {
             transform: translateY(-5px);
             border-color: var(--border-glow);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 25px rgba(0, 242, 254, 0.08);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
 
-        .card-header {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 14px;
+        .cover-wrapper {
+            position: relative;
+            margin-bottom: 12px;
         }
 
-        .card-icon {
-            width: 58px;
-            height: 58px;
-            border-radius: 16px;
-            object-fit: cover;
-            background: #151c2c;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .card-details h3 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .tag-badge {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 3px 8px;
-            background: rgba(0, 242, 254, 0.1);
-            color: var(--accent-cyan);
-            border-radius: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        .card-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 18px;
-        }
-
-        .action-btn {
+        .song-cover {
             width: 100%;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-subtle);
+            height: 180px;
             border-radius: 12px;
-            color: var(--text-primary);
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
+            object-fit: cover;
+            background: #1a2332;
+        }
+
+        .play-overlay-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            color: #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: 0.3s;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
         }
 
-        .feature-card:hover .action-btn {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            color: #07090e;
-            border-color: transparent;
+        .song-card:hover .play-overlay-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .song-title {
+            font-size: 15px;
             font-weight: 700;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* Music Player Bar */
+        .song-artist {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Fixed Bottom Music Player Bar */
         .music-player-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 80px;
+            height: 85px;
             background: var(--player-bg);
             backdrop-filter: blur(25px);
             border-top: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 8%;
+            padding: 0 6%;
             z-index: 2000;
             box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
         }
@@ -331,8 +347,8 @@
         }
 
         .track-thumb {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 10px;
             background: #1a2332;
             object-fit: cover;
@@ -379,21 +395,16 @@
             color: #fff;
         }
 
-        .play-btn {
-            width: 38px;
-            height: 38px;
+        .main-play-btn {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: #fff !important;
             color: #000 !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px !important;
-            transition: transform 0.2s !important;
-        }
-
-        .play-btn:hover {
-            transform: scale(1.08);
+            font-size: 15px !important;
         }
 
         .progress-bar-container {
@@ -410,9 +421,8 @@
             height: 4px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
-            position: relative;
             cursor: pointer;
-            overflow: hidden;
+            position: relative;
         }
 
         .progress-fill {
@@ -423,138 +433,147 @@
         }
 
         footer {
-            padding: 30px 8%;
+            padding: 20px 6%;
             background: #040609;
             border-top: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
             color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .footer-left span {
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .footer-right a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .footer-right a:hover {
-            color: var(--accent-cyan);
+            font-size: 12px;
         }
 
         @media (max-width: 768px) {
-            header { padding: 15px 5%; }
-            .music-player-bar { padding: 0 5%; }
             .track-info { width: 50%; }
             .player-controls { width: 50%; }
             .progress-bar-container { display: none; }
-            footer { flex-direction: column; gap: 12px; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="#" class="brand-logo">
-            <i class="fa-solid fa-bolt-lightning"></i>
-            Pix <span>General</span>
-        </a>
-        <div class="nav-actions">
-            <a href="mailto:amazuddinabir@gmail.com" class="contact-link">
-                <i class="fa-solid fa-envelope"></i> Support
+    <!-- Overlay Background -->
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <!-- Sliding Left Sidebar for Apps -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fa-solid fa-box-open"></i> Apps & Software</h3>
+            <button class="close-sidebar-btn" onclick="closeSidebar()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- App 1 -->
+        <div class="sidebar-card">
+            <h4>1.1.1.1 WARP+ Premium</h4>
+            <p>Unlimited fast & secure internet connection.</p>
+            <a href="https://github.com/pixaua/pix-genarel/releases/download/V1/1.1.1.1.VPN.v6.38.9.Unlimited.Warp.apk" class="sidebar-btn" onclick="trackAction('Downloaded 1.1.1.1 VPN APK')">
+                <i class="fa-solid fa-download"></i> Download APK
             </a>
         </div>
+
+        <!-- Tool 2 -->
+        <div class="sidebar-card">
+            <h4>Video Downloader Bot</h4>
+            <p>Download IG, YT, TikTok videos instantly.</p>
+            <a href="https://t.me/amz16_bot" target="_blank" class="sidebar-btn">
+                <i class="fa-brands fa-telegram"></i> Open Bot
+            </a>
+        </div>
+    </aside>
+
+    <!-- Top Navigation Header -->
+    <header>
+        <div class="header-left">
+            <button class="menu-toggle-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
+            <a href="#" class="brand-logo">
+                <i class="fa-solid fa-bolt-lightning"></i>
+                Pix <span>Music</span>
+            </a>
+        </div>
+
+        <!-- Support Email Link on Top Right -->
+        <a href="mailto:amazuddinabir@gmail.com" class="support-btn-top">
+            <i class="fa-solid fa-headset"></i> Support
+        </a>
     </header>
 
+    <!-- Hero Banner -->
     <section class="hero-section">
-        <h1>High-Performance <span>Digital Hub</span></h1>
-        <p>Stream live music ad-free and download verified premium software directly without redirects.</p>
+        <h1>Welcome to <span>Pix Streamer</span></h1>
+        <p>Listen to your favorite trending audio tracks online. Premium & Ad-Free experience.</p>
     </section>
 
-    <div class="controls-area">
-        <div class="search-wrapper">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" placeholder="Search apps, utilities, music tracks..." onkeyup="filterContent()">
-        </div>
-        <div class="filter-tabs">
-            <button class="tab-btn active" onclick="filterCategory('all')">All Content</button>
-            <button class="tab-btn" onclick="filterCategory('music')">Music Player</button>
-            <button class="tab-btn" onclick="filterCategory('apps')">Verified Apps</button>
-        </div>
-    </div>
-
-    <main class="dashboard-container">
+    <!-- Main Music List (Homepage) -->
+    <main class="music-container">
         <div class="section-header">
-            <i class="fa-solid fa-layer-group" style="color: var(--accent-cyan);"></i> Featured Repositories
+            <i class="fa-solid fa-compact-disc" style="color: var(--accent-cyan);"></i> Trending Web Tracks
         </div>
 
-        <div class="content-grid" id="contentGrid">
+        <div class="music-grid">
             
-            <!-- Music Track Card -->
-            <div class="feature-card" data-category="music" data-title="pix web music player stream latest songs ad-free">
-                <div>
-                    <div class="card-header">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3844/3844720.png" class="card-icon" alt="Music Streamer">
-                        <div class="card-details">
-                            <h3>Pix Web Streamer</h3>
-                            <span class="tag-badge">Live • Ad-Free</span>
-                        </div>
-                    </div>
-                    <p class="card-desc">Instantly stream top trending tracks directly in your browser. Zero setup required.</p>
+            <!-- Song 1 -->
+            <div class="song-card" onclick="playTrack('Cyberpunk Synthwave', 'Pix General Beats', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&q=80')">
+                <div class="cover-wrapper">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&q=80" class="song-cover" alt="Song Cover">
+                    <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
                 </div>
-                <button class="action-btn" onclick="playWebTrack('Cyberpunk Synthwave', 'Pix General Originals', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')">
-                    <i class="fa-solid fa-circle-play"></i> Play Selected Track
-                </button>
+                <div class="song-title">Cyberpunk Synthwave</div>
+                <div class="song-artist">Pix General Beats</div>
             </div>
 
-            <!-- APK Download Card -->
-            <div class="feature-card" data-category="apps" data-title="1.1.1.1 vpn warp premium unlimited internet">
-                <div>
-                    <div class="card-header">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2092/2092663.png" class="card-icon" alt="1.1.1.1 VPN">
-                        <div class="card-details">
-                            <h3>1.1.1.1 WARP+ Premium</h3>
-                            <span class="tag-badge">v6.38.9 • 31MB</span>
-                        </div>
-                    </div>
-                    <p class="card-desc">Optimized network protocol with unlimited WARP+ bandwidth. Direct APK download.</p>
+            <!-- Song 2 -->
+            <div class="song-card" onclick="playTrack('Chill Lofi Chillout', 'Neon Vibes', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80')">
+                <div class="cover-wrapper">
+                    <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80" class="song-cover" alt="Song Cover">
+                    <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
                 </div>
-                <a href="https://github.com/pixaua/pix-genarel/releases/download/V1/1.1.1.1.VPN.v6.38.9.Unlimited.Warp.apk" class="action-btn" onclick="trackAction('Downloaded 1.1.1.1 VPN APK')">
-                    <i class="fa-solid fa-download"></i> Direct Download
-                </a>
+                <div class="song-title">Chill Lofi Chillout</div>
+                <div class="song-artist">Neon Vibes</div>
+            </div>
+
+            <!-- Song 3 -->
+            <div class="song-card" onclick="playTrack('Acoustic Sunset', 'Acoustic Dreams', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80')">
+                <div class="cover-wrapper">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80" class="song-cover" alt="Song Cover">
+                    <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div class="song-title">Acoustic Sunset</div>
+                <div class="song-artist">Acoustic Dreams</div>
+            </div>
+
+            <!-- Song 4 -->
+            <div class="song-card" onclick="playTrack('Electronic Pulse', 'Digital DJ', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80')">
+                <div class="cover-wrapper">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80" class="song-cover" alt="Song Cover">
+                    <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div class="song-title">Electronic Pulse</div>
+                <div class="song-artist">Digital DJ</div>
             </div>
 
         </div>
     </main>
 
-    <!-- Bottom Audio Player -->
+    <!-- Bottom Audio Player Engine -->
     <div class="music-player-bar">
         <div class="track-info">
-            <img src="https://cdn-icons-png.flaticon.com/512/3844/3844720.png" id="playerThumb" class="track-thumb" alt="Track Cover">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&q=80" id="playerThumb" class="track-thumb" alt="Track Cover">
             <div class="track-text">
                 <h4 id="playerTitle">Cyberpunk Synthwave</h4>
-                <p id="playerArtist">Pix General Originals</p>
+                <p id="playerArtist">Pix General Beats</p>
             </div>
         </div>
 
         <div class="player-controls">
             <div class="control-btns">
                 <button><i class="fa-solid fa-backward-step"></i></button>
-                <button class="play-btn" id="masterPlayBtn" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></button>
+                <button class="main-play-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></button>
                 <button><i class="fa-solid fa-forward-step"></i></button>
             </div>
             <div class="progress-bar-container">
                 <span id="currentTime">0:00</span>
-                <div class="progress-bar">
+                <div class="progress-bar" onclick="seekAudio(event)">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
-                <span id="durationTime">3:45</span>
+                <span id="durationTime">0:00</span>
             </div>
         </div>
 
@@ -562,110 +581,110 @@
     </div>
 
     <footer>
-        <div class="footer-left">
-            <span>Pix General</span> &copy; 2026. All rights reserved.
-        </div>
-        <div class="footer-right">
-            <a href="mailto:amazuddinabir@gmail.com"><i class="fa-solid fa-envelope"></i> amazuddinabir@gmail.com</a>
-        </div>
+        <p>&copy; 2026 Pix General Hub. Designed for Web & Mobile Streaming.</p>
     </footer>
 
-    <!-- TELEGRAM LIVE TRACKER & SYSTEM SCRIPT -->
+    <!-- Scripts -->
     <script>
-        // TELEGRAM CONFIGURATION (Configured with your Bot & Chat ID)
+        // Sidebar Logic
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        // TELEGRAM NOTIFICATION SYSTEM
         const BOT_TOKEN = '7678905793:AAGEcM1-kHIo-jVsrZD0WliltCiSc9MIfBM';
         const CHAT_ID = '6162953772';
 
-        // Function to send Telegram Alert
         function sendTelegramLog(message) {
             const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
             fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: message,
-                    parse_mode: 'HTML'
-                })
+                body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'HTML' })
             }).catch(err => console.error("Logger error:", err));
         }
 
-        // Auto Log Visitor Details on Page Visit
         window.addEventListener('DOMContentLoaded', () => {
+            const ua = navigator.userAgent;
+            let browser = "Google Chrome";
+            let os = navigator.platform || "Device";
+
             fetch('https://ipapi.co/json/')
                 .then(res => res.json())
                 .then(data => {
-                    const logMsg = `🌐 <b>New Visitor on Pix General!</b>\n\n` +
-                                   `📍 <b>IP:</b> ${data.ip}\n` +
-                                   `🏙️ <b>City:</b> ${data.city}, ${data.country_name}\n` +
-                                   `📱 <b>Device:</b> ${navigator.userAgentData ? navigator.userAgentData.platform : 'Mobile/PC'}\n` +
+                    const logMsg = `🌐 <b>New Visitor on Pix Music!</b>\n\n` +
+                                   `📍 <b>IP:</b> <code>${data.ip || 'N/A'}</code>\n` +
+                                   `🏙️ <b>Location:</b> ${data.city || 'Unknown'}, ${data.country_name || 'Unknown'}\n` +
+                                   `💻 <b>Browser:</b> ${browser}\n` +
+                                   `📱 <b>OS:</b> ${os}\n` +
                                    `⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`;
                     sendTelegramLog(logMsg);
                 })
                 .catch(() => {
-                    sendTelegramLog(`🌐 <b>New Visitor Detected!</b>\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
+                    sendTelegramLog(`🌐 <b>New Visitor Entered Site!</b>\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
                 });
         });
 
-        // Track Specific Actions (Downloads / Clicks)
         function trackAction(actionName) {
-            const logMsg = `⚡ <b>User Action Alert!</b>\n\n` +
-                           `📌 <b>Action:</b> ${actionName}\n` +
-                           `⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`;
-            sendTelegramLog(logMsg);
+            sendTelegramLog(`⚡ <b>User Action:</b> ${actionName}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
         }
 
-        // Audio Player Controls
+        // Audio Player Logic
         const audio = document.getElementById('audioEngine');
         const playIcon = document.getElementById('playIcon');
         const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationTimeEl = document.getElementById('durationTime');
 
         function togglePlay() {
             if (audio.paused) {
                 audio.play();
                 playIcon.className = 'fa-solid fa-pause';
-                trackAction('Played Audio Track');
+                trackAction('Played Current Track');
             } else {
                 audio.pause();
                 playIcon.className = 'fa-solid fa-play';
             }
         }
 
-        function playWebTrack(title, artist, url) {
+        function playTrack(title, artist, url, thumb) {
             document.getElementById('playerTitle').innerText = title;
             document.getElementById('playerArtist').innerText = artist;
+            document.getElementById('playerThumb').src = thumb;
             audio.src = url;
             audio.play();
             playIcon.className = 'fa-solid fa-pause';
-            trackAction(`Listening to: ${title}`);
+            trackAction(`Playing Track: ${title}`);
         }
 
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60);
+            const s = Math.floor(secs % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        audio.onloadedmetadata = function() {
+            durationTimeEl.innerText = formatTime(audio.duration);
+        };
+
         audio.ontimeupdate = function() {
-            if(audio.duration) {
+            if (audio.duration) {
                 const pct = (audio.currentTime / audio.duration) * 100;
                 progressFill.style.width = pct + '%';
+                currentTimeEl.innerText = formatTime(audio.currentTime);
             }
         };
 
-        function filterCategory(cat) {
-            const btns = document.querySelectorAll('.tab-btn');
-            btns.forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-
-            const cards = document.querySelectorAll('.feature-card');
-            cards.forEach(card => {
-                const cardCat = card.getAttribute('data-category');
-                card.style.display = (cat === 'all' || cardCat.includes(cat)) ? 'flex' : 'none';
-            });
-        }
-
-        function filterContent() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.feature-card');
-            cards.forEach(card => {
-                const title = card.getAttribute('data-title').toLowerCase();
-                card.style.display = title.includes(query) ? 'flex' : 'none';
-            });
+        function seekAudio(e) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
         }
     </script>
 </body>
