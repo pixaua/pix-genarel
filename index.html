@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pix General — Premium Web Music & App Hub</title>
+    <title>Pix General — Real Music & App Hub</title>
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -38,7 +38,7 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            padding-bottom: 100px;
+            padding-bottom: 110px;
         }
 
         /* Header Navigation */
@@ -118,7 +118,7 @@
             box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
         }
 
-        /* Sliding Left Sidebar (Apps & Games Categories) */
+        /* Sliding Left Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
@@ -224,9 +224,9 @@
             display: block;
         }
 
-        /* Hero & Search Section (Dedicated for Music) */
+        /* Hero & Search Section */
         .hero-section {
-            padding: 30px 6% 20px;
+            padding: 30px 6% 10px;
             text-align: center;
         }
 
@@ -243,12 +243,19 @@
         }
 
         .search-container {
-            max-width: 500px;
-            margin: 20px auto 30px;
+            max-width: 550px;
+            margin: 20px auto 25px;
             position: relative;
+            display: flex;
+            gap: 10px;
         }
 
-        .search-container input {
+        .search-wrapper-input {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-wrapper-input input {
             width: 100%;
             padding: 14px 20px 14px 48px;
             background: var(--card-bg);
@@ -260,17 +267,32 @@
             transition: 0.3s;
         }
 
-        .search-container input:focus {
+        .search-wrapper-input input:focus {
             border-color: var(--accent-cyan);
             box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
         }
 
-        .search-container i {
+        .search-wrapper-input i {
             position: absolute;
             left: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-secondary);
+        }
+
+        .search-btn {
+            padding: 0 25px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
+            border-radius: 40px;
+            color: #07090e;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-btn:hover {
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
         }
 
         /* Music Catalog Grid */
@@ -289,7 +311,7 @@
 
         .music-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
         }
 
@@ -297,10 +319,12 @@
             background: var(--card-bg);
             border: 1px solid var(--border-subtle);
             border-radius: 16px;
-            padding: 15px;
+            padding: 14px;
             transition: all 0.3s ease;
-            cursor: pointer;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .song-card:hover {
@@ -312,6 +336,7 @@
         .cover-wrapper {
             position: relative;
             margin-bottom: 12px;
+            cursor: pointer;
         }
 
         .song-cover {
@@ -347,7 +372,7 @@
         }
 
         .song-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             margin-bottom: 4px;
             white-space: nowrap;
@@ -358,9 +383,37 @@
         .song-artist {
             font-size: 12px;
             color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 12px;
         }
 
-        /* Fixed Spotify Style Bottom Player */
+        .download-track-btn {
+            width: 100%;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .download-track-btn:hover {
+            background: var(--accent-cyan);
+            color: #07090e;
+        }
+
+        /* Fixed Bottom Music Player */
         .music-player-bar {
             position: fixed;
             bottom: 0;
@@ -405,6 +458,9 @@
         .track-text p {
             font-size: 12px;
             color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .player-controls {
@@ -476,6 +532,14 @@
             border-radius: 2px;
         }
 
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+            color: var(--accent-cyan);
+            grid-column: 1 / -1;
+        }
+
         footer {
             padding: 20px 6%;
             background: #040609;
@@ -497,7 +561,7 @@
     <!-- Overlay -->
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-    <!-- Left Sidebar Menu (Apps & Games) -->
+    <!-- Left Sidebar Menu -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3><i class="fa-solid fa-layer-group"></i> Hub Menu</h3>
@@ -516,7 +580,7 @@
         <div class="menu-category-title">Offline Games</div>
         <div class="sidebar-card">
             <h4>Coming Soon</h4>
-            <p>High-end offline games will be added here.</p>
+            <p>Verified offline games will be listed here.</p>
         </div>
     </aside>
 
@@ -536,73 +600,36 @@
 
     <!-- Hero Search Section -->
     <section class="hero-section">
-        <h1>Stream Latest <span>Music Tracks</span></h1>
-        <p style="color: var(--text-secondary); font-size: 14px;">Explore and stream real high-quality audio tracks instantly.</p>
+        <h1>Stream Real <span>Music Live</span></h1>
+        <p style="color: var(--text-secondary); font-size: 14px;">Search any real song or artist worldwide and stream instantly.</p>
         
         <div class="search-container">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" placeholder="Search songs, artists..." onkeyup="filterSongs()">
+            <div class="search-wrapper-input">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Type artist or song (e.g. J Balvin, BTS, Arijit Singh)..." onkeypress="handleKeyPress(event)">
+            </div>
+            <button class="search-btn" onclick="searchRealSongs()">Search</button>
         </div>
     </section>
 
     <!-- Main Music Streamer Grid -->
     <main class="music-container">
-        <div class="section-header">
-            <i class="fa-solid fa-fire" style="color: var(--accent-cyan);"></i> Trending Tracks
+        <div class="section-header" id="sectionTitle">
+            <i class="fa-solid fa-fire" style="color: var(--accent-cyan);"></i> Trending Global Hits
         </div>
 
         <div class="music-grid" id="songGrid">
-            
-            <!-- Song 1 -->
-            <div class="song-card" data-title="cyberpunk synthwave pix general" onclick="playTrack('Cyberpunk Synthwave', 'Pix General Beats', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&q=80')">
-                <div class="cover-wrapper">
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&q=80" class="song-cover" alt="Cover">
-                    <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
-                </div>
-                <div class="song-title">Cyberpunk Synthwave</div>
-                <div class="song-artist">Pix General Beats</div>
-            </div>
-
-            <!-- Song 2 -->
-            <div class="song-card" data-title="chill lofi chillout neon vibes" onclick="playTrack('Chill Lofi Chillout', 'Neon Vibes', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80')">
-                <div class="cover-wrapper">
-                    <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80" class="song-cover" alt="Cover">
-                    <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
-                </div>
-                <div class="song-title">Chill Lofi Chillout</div>
-                <div class="song-artist">Neon Vibes</div>
-            </div>
-
-            <!-- Song 3 -->
-            <div class="song-card" data-title="acoustic sunset acoustic dreams" onclick="playTrack('Acoustic Sunset', 'Acoustic Dreams', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80')">
-                <div class="cover-wrapper">
-                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80" class="song-cover" alt="Cover">
-                    <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
-                </div>
-                <div class="song-title">Acoustic Sunset</div>
-                <div class="song-artist">Acoustic Dreams</div>
-            </div>
-
-            <!-- Song 4 -->
-            <div class="song-card" data-title="electronic pulse digital dj" onclick="playTrack('Electronic Pulse', 'Digital DJ', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80')">
-                <div class="cover-wrapper">
-                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80" class="song-cover" alt="Cover">
-                    <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
-                </div>
-                <div class="song-title">Electronic Pulse</div>
-                <div class="song-artist">Digital DJ</div>
-            </div>
-
+            <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading real music tracks...</div>
         </div>
     </main>
 
     <!-- Bottom Audio Player -->
     <div class="music-player-bar">
         <div class="track-info">
-            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&q=80" id="playerThumb" class="track-thumb" alt="Thumb">
+            <img src="https://cdn-icons-png.flaticon.com/512/3844/3844720.png" id="playerThumb" class="track-thumb" alt="Thumb">
             <div class="track-text">
-                <h4 id="playerTitle">Cyberpunk Synthwave</h4>
-                <p id="playerArtist">Pix General Beats</p>
+                <h4 id="playerTitle">Select a track</h4>
+                <p id="playerArtist">Pix Music Player</p>
             </div>
         </div>
 
@@ -621,14 +648,14 @@
             </div>
         </div>
 
-        <audio id="audioEngine" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+        <audio id="audioEngine"></audio>
     </div>
 
     <footer>
         <p>&copy; 2026 Pix General Hub. All rights reserved.</p>
     </footer>
 
-    <!-- Script with Telegram Live IP & Device Tracker -->
+    <!-- REAL MUSIC API & TELEGRAM TRACKER SCRIPT -->
     <script>
         const BOT_TOKEN = '7678905793:AAGEcM1-kHIo-jVsrZD0WliltCiSc9MIfBM';
         const CHAT_ID = '6162953772';
@@ -641,31 +668,29 @@
             }).catch(err => console.error("Logger error:", err));
         }
 
-        // Visitor IP & Device Logger on Page Load
+        // Visitor IP & Device Logger
         window.addEventListener('DOMContentLoaded', () => {
             const ua = navigator.userAgent;
             let browser = "Google Chrome";
             let os = navigator.platform || "Device";
 
-            if (ua.indexOf("Firefox") > -1) browser = "Mozilla Firefox";
-            else if (ua.indexOf("SamsungBrowser") > -1) browser = "Samsung Internet";
-            else if (ua.indexOf("Edge") > -1) browser = "Microsoft Edge";
-            else if (ua.indexOf("Safari") > -1) browser = "Apple Safari";
-
             fetch('https://ipapi.co/json/')
                 .then(res => res.json())
                 .then(data => {
                     const logMsg = `🌐 <b>New Visitor on Pix Music!</b>\n\n` +
-                                   `📍 <b>IP Address:</b> <code>${data.ip || 'N/A'}</code>\n` +
+                                   `📍 <b>IP:</b> <code>${data.ip || 'N/A'}</code>\n` +
                                    `🏙️ <b>Location:</b> ${data.city || 'Unknown'}, ${data.country_name || 'Unknown'}\n` +
                                    `💻 <b>Browser:</b> ${browser}\n` +
-                                   `📱 <b>Platform:</b> ${os}\n` +
+                                   `📱 <b>OS:</b> ${os}\n` +
                                    `⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`;
                     sendTelegramLog(logMsg);
                 })
                 .catch(() => {
-                    sendTelegramLog(`🌐 <b>New Visitor Detected!</b>\n💻 <b>Browser:</b> ${browser}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
+                    sendTelegramLog(`🌐 <b>New Visitor Entered Site!</b>\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
                 });
+
+            // Auto-load Trending Real Songs on start
+            fetchRealSongs('J Balvin Trending Hits');
         });
 
         function trackAction(actionName) {
@@ -683,7 +708,65 @@
             document.getElementById('overlay').classList.remove('active');
         }
 
-        // Real Music Player Engine
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                searchRealSongs();
+            }
+        }
+
+        function searchRealSongs() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                document.getElementById('sectionTitle').innerHTML = `<i class="fa-solid fa-magnifying-glass" style="color: var(--accent-cyan);"></i> Results for "${query}"`;
+                fetchRealSongs(query);
+            }
+        }
+
+        // FETCH REAL SONGS VIA JIOSAAVN API (REAL AUDIO STREAMS)
+        function fetchRealSongs(query) {
+            const songGrid = document.getElementById('songGrid');
+            songGrid.innerHTML = '<div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Fetching real tracks...</div>';
+
+            fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(query)}&limit=15`)
+                .then(res => res.json())
+                .then(response => {
+                    if (response.success && response.data.results.length > 0) {
+                        songGrid.innerHTML = '';
+                        response.data.results.forEach(song => {
+                            // Extract High Quality Audio URL and Image
+                            const downloadUrl = song.downloadUrl[song.downloadUrl.length - 1].link; // Max Quality MP3
+                            const imageUrl = song.image[song.image.length - 1].link;
+                            const songName = song.name.replace(/&quot;/g, '"').replace(/&#039;/g, "'");
+                            const artistName = song.primaryArtists || song.artists.primary[0].name;
+
+                            const card = document.createElement('div');
+                            card.className = 'song-card';
+                            card.innerHTML = `
+                                <div>
+                                    <div class="cover-wrapper" onclick="playTrack('${songName.replace(/'/g, "\\'")}', '${artistName.replace(/'/g, "\\'")}', '${downloadUrl}', '${imageUrl}')">
+                                        <img src="${imageUrl}" class="song-cover" alt="Cover">
+                                        <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
+                                    </div>
+                                    <div class="song-title">${songName}</div>
+                                    <div class="song-artist">${artistName}</div>
+                                </div>
+                                <a href="${downloadUrl}" target="_blank" download="${songName}.mp3" class="download-track-btn" onclick="trackAction('Downloaded Song: ${songName.replace(/'/g, "\\'")}')">
+                                    <i class="fa-solid fa-download"></i> Download MP3
+                                </a>
+                            `;
+                            songGrid.appendChild(card);
+                        });
+                    } else {
+                        songGrid.innerHTML = '<div class="loading-spinner">No real songs found. Try another search!</div>';
+                    }
+                })
+                .catch(err => {
+                    console.error("API Error:", err);
+                    songGrid.innerHTML = '<div class="loading-spinner">Error loading music. Please search again!</div>';
+                });
+        }
+
+        // Real Music Player Engine Logic
         const audio = document.getElementById('audioEngine');
         const playIcon = document.getElementById('playIcon');
         const progressFill = document.getElementById('progressFill');
@@ -691,6 +774,7 @@
         const durationTimeEl = document.getElementById('durationTime');
 
         function togglePlay() {
+            if (!audio.src) return;
             if (audio.paused) {
                 audio.play();
                 playIcon.className = 'fa-solid fa-pause';
@@ -708,7 +792,7 @@
             audio.src = url;
             audio.play();
             playIcon.className = 'fa-solid fa-pause';
-            trackAction(`Playing Song: ${title}`);
+            trackAction(`Playing Real Song: ${title}`);
         }
 
         function formatTime(secs) {
@@ -735,16 +819,6 @@
             if (audio.duration) {
                 audio.currentTime = pos * audio.duration;
             }
-        }
-
-        // Live Search Filter
-        function filterSongs() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.song-card');
-            cards.forEach(card => {
-                const title = card.getAttribute('data-title');
-                card.style.display = title.includes(query) ? 'block' : 'none';
-            });
         }
     </script>
 </body>
