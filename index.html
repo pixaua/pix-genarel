@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pix General — Real Web Music Hub</title>
+    <title>Pix Music — Stream Full Songs & Hub</title>
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
     <style>
         :root {
             --bg-dark: #07090e;
-            --card-bg: rgba(18, 24, 38, 0.7);
+            --card-bg: rgba(18, 24, 38, 0.75);
             --sidebar-bg: #0b0f19;
             --accent-cyan: #00f2fe;
             --accent-blue: #4facfe;
@@ -41,7 +41,7 @@
             padding-bottom: 110px;
         }
 
-        /* Header Navigation */
+        /* Header */
         header {
             position: sticky;
             top: 0;
@@ -67,11 +67,6 @@
             color: var(--text-primary);
             font-size: 22px;
             cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .menu-toggle-btn:hover {
-            color: var(--accent-cyan);
         }
 
         .brand-logo {
@@ -80,14 +75,8 @@
             gap: 10px;
             font-size: 22px;
             font-weight: 800;
-            letter-spacing: -0.5px;
             color: var(--text-primary);
             text-decoration: none;
-        }
-
-        .brand-logo i {
-            color: var(--accent-cyan);
-            filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.8));
         }
 
         .brand-logo span {
@@ -96,29 +85,35 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .support-btn-top {
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
+        .auth-nav-btns {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+        }
+
+        .signin-btn {
+            background: none;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
             padding: 8px 18px;
-            background: rgba(0, 242, 254, 0.08);
-            border: 1px solid var(--border-glow);
-            border-radius: 30px;
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
         }
 
-        .support-btn-top:hover {
+        .create-acc-btn {
             background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
             color: #07090e;
-            border-color: transparent;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
         }
 
-        /* Sliding Left Sidebar */
+        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
@@ -133,9 +128,7 @@
             overflow-y: auto;
         }
 
-        .sidebar.active {
-            left: 0;
-        }
+        .sidebar.active { left: 0; }
 
         .sidebar-header {
             display: flex;
@@ -146,46 +139,12 @@
             padding-bottom: 15px;
         }
 
-        .sidebar-header h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--accent-cyan);
-        }
-
-        .close-sidebar-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 18px;
-            cursor: pointer;
-        }
-
-        .menu-category-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin: 20px 0 10px;
-            font-weight: 700;
-        }
-
         .sidebar-card {
             background: var(--card-bg);
             border: 1px solid var(--border-subtle);
             border-radius: 14px;
             padding: 14px;
             margin-bottom: 12px;
-        }
-
-        .sidebar-card h4 {
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .sidebar-card p {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
         }
 
         .sidebar-btn {
@@ -200,52 +159,100 @@
             font-size: 12px;
             font-weight: 600;
             border: 1px solid var(--border-subtle);
-            transition: 0.2s;
         }
 
-        .sidebar-btn:hover {
-            background: var(--accent-cyan);
-            color: #07090e;
-        }
-
-        .overlay {
+        /* Registration Modal with Name, Age, Gender */
+        .auth-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            z-index: 2500;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 4000;
             display: none;
-            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .overlay.active {
+        .auth-modal.active { display: flex; }
+
+        .modal-box {
+            background: #0d131f;
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 440px;
+            padding: 30px 24px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .input-group {
+            margin: 12px 0;
+            text-align: left;
+        }
+
+        .input-group label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
             display: block;
         }
 
-        /* Hero & Search Section */
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 11px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+            font-size: 13px;
+        }
+
+        .input-group select option {
+            background: #0d131f;
+            color: #fff;
+        }
+
+        .submit-auth-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
+            border-radius: 30px;
+            color: #07090e;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        /* Hero & Search */
         .hero-section {
             padding: 30px 6% 10px;
             text-align: center;
         }
 
-        .hero-section h1 {
-            font-size: 30px;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-
-        .hero-section h1 span {
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .search-container {
             max-width: 550px;
             margin: 20px auto 25px;
-            position: relative;
             display: flex;
             gap: 10px;
         }
@@ -262,14 +269,7 @@
             border: 1px solid var(--border-subtle);
             border-radius: 40px;
             color: #fff;
-            font-size: 14px;
             outline: none;
-            transition: 0.3s;
-        }
-
-        .search-wrapper-input input:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
         }
 
         .search-wrapper-input i {
@@ -288,26 +288,10 @@
             color: #07090e;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .search-btn:hover {
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
         }
 
         /* Music Grid */
-        .music-container {
-            padding: 0 6% 40px;
-        }
-
-        .section-header {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .music-container { padding: 0 6% 40px; }
 
         .music-grid {
             display: grid;
@@ -320,23 +304,13 @@
             border: 1px solid var(--border-subtle);
             border-radius: 16px;
             padding: 14px;
-            transition: all 0.3s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            transition: 0.3s;
+            cursor: pointer;
         }
 
         .song-card:hover {
-            transform: translateY(-5px);
             border-color: var(--border-glow);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .cover-wrapper {
-            position: relative;
-            margin-bottom: 12px;
-            cursor: pointer;
+            transform: translateY(-5px);
         }
 
         .song-cover {
@@ -344,76 +318,9 @@
             height: 170px;
             border-radius: 12px;
             object-fit: cover;
-            background: #151c2a;
         }
 
-        .play-overlay-btn {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--accent-cyan);
-            color: #07090e;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.5);
-            opacity: 0;
-            transform: translateY(8px);
-            transition: all 0.3s ease;
-        }
-
-        .song-card:hover .play-overlay-btn {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .song-title {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .song-artist {
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 12px;
-        }
-
-        .download-track-btn {
-            width: 100%;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
-
-        .download-track-btn:hover {
-            background: var(--accent-cyan);
-            color: #07090e;
-        }
-
-        /* Music Player Bar */
+        /* Player */
         .music-player-bar {
             position: fixed;
             bottom: 0;
@@ -428,185 +335,98 @@
             justify-content: space-between;
             padding: 0 6%;
             z-index: 2000;
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6);
         }
 
-        .track-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            width: 30%;
-        }
-
-        .track-thumb {
-            width: 52px;
-            height: 52px;
-            border-radius: 10px;
-            background: #151c2a;
-            object-fit: cover;
-        }
-
-        .track-text h4 {
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .track-text p {
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .player-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            width: 40%;
-        }
-
-        .control-btns {
-            display: flex;
-            align-items: center;
-            gap: 22px;
-        }
-
-        .control-btns button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .control-btns button:hover {
-            color: #fff;
-        }
-
+        .track-info { display: flex; align-items: center; gap: 14px; width: 30%; }
+        .track-thumb { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; }
+        
         .main-play-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #fff !important;
-            color: #000 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px !important;
-            transition: transform 0.2s !important;
+            width: 42px; height: 42px; border-radius: 50%; background: #fff; color: #000;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; border: none;
         }
 
-        .main-play-btn:hover {
-            transform: scale(1.08);
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75); z-index: 2500; display: none;
         }
-
-        .progress-bar-container {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .progress-bar {
-            flex: 1;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: var(--accent-cyan);
-            border-radius: 2px;
-        }
-
-        .loading-spinner {
-            text-align: center;
-            padding: 40px;
-            font-size: 16px;
-            color: var(--accent-cyan);
-            grid-column: 1 / -1;
-        }
-
-        footer {
-            padding: 20px 6%;
-            background: #040609;
-            border-top: 1px solid var(--border-subtle);
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .track-info { width: 50%; }
-            .player-controls { width: 50%; }
-            .progress-bar-container { display: none; }
-        }
+        .overlay.active { display: block; }
     </style>
 </head>
 <body>
 
-    <!-- Overlay -->
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-    <!-- Left Sidebar Menu -->
+    <!-- Registration & Profile Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="modal-box">
+            <button class="close-modal-btn" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Create Pix Music Account</h2>
+            <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 15px;">Register to get your 7-digit unique ID & stream full songs.</p>
+
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="regName" placeholder="Enter your name">
+            </div>
+
+            <div class="input-group">
+                <label>Age</label>
+                <input type="number" id="regAge" placeholder="Enter your age">
+            </div>
+
+            <div class="input-group">
+                <label>Gender</label>
+                <select id="regGender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Email or Phone</label>
+                <input type="text" id="regContact" placeholder="example@gmail.com or Phone">
+            </div>
+
+            <button class="submit-auth-btn" onclick="registerUser()">Register & Get 7-Digit ID</button>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h3><i class="fa-solid fa-layer-group"></i> Hub Menu</h3>
-            <button class="close-sidebar-btn" onclick="closeSidebar()"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="color: var(--accent-cyan);"><i class="fa-solid fa-layer-group"></i> Hub Menu</h3>
+            <button class="close-sidebar-btn" onclick="closeSidebar()" style="background:none; border:none; color:#fff;"><i class="fa-solid fa-xmark"></i></button>
         </div>
-
-        <div class="menu-category-title">Premium Apps</div>
         <div class="sidebar-card">
             <h4>1.1.1.1 WARP+ VPN</h4>
-            <p>Unlimited fast & secure proxy server.</p>
-            <a href="https://github.com/pixaua/pix-genarel/releases/download/V1/1.1.1.1.VPN.v6.38.9.Unlimited.Warp.apk" class="sidebar-btn" onclick="trackAction('Downloaded 1.1.1.1 VPN APK')">
-                <i class="fa-solid fa-download"></i> Download APK
-            </a>
-        </div>
-
-        <div class="menu-category-title">Offline Games</div>
-        <div class="sidebar-card">
-            <h4>Coming Soon</h4>
-            <p>Verified offline games will be listed here.</p>
+            <p style="font-size: 11px; color: var(--text-secondary);">Unlimited fast & secure proxy server.</p>
+            <a href="https://github.com/pixaua/pix-genarel/releases/download/V1/1.1.1.1.VPN.v6.38.9.Unlimited.Warp.apk" class="sidebar-btn" onclick="trackAction('Downloaded 1.1.1.1 VPN APK')">Download APK</a>
         </div>
     </aside>
 
-    <!-- Top Navigation -->
+    <!-- Header -->
     <header>
         <div class="header-left">
             <button class="menu-toggle-btn" onclick="openSidebar()"><i class="fa-solid fa-bars"></i></button>
             <a href="#" class="brand-logo">
-                <i class="fa-solid fa-bolt-lightning"></i>
-                Pix <span>Music</span>
+                <i class="fa-solid fa-bolt-lightning" style="color: var(--accent-cyan);"></i> Pix <span>Music</span>
             </a>
         </div>
-        <a href="mailto:amazuddinabir@gmail.com" class="support-btn-top">
-            <i class="fa-solid fa-envelope"></i> Support
-        </a>
+        <div class="auth-nav-btns">
+            <button class="signin-btn" onclick="openAuthModal()">Sign in</button>
+            <button class="create-acc-btn" onclick="openAuthModal()">Register</button>
+        </div>
     </header>
 
-    <!-- Hero Search Section -->
+    <!-- Hero Search -->
     <section class="hero-section">
-        <h1>Stream Real <span>Music Live</span></h1>
-        <p style="color: var(--text-secondary); font-size: 14px;">Search any real song or artist worldwide and stream instantly.</p>
+        <h1 style="font-size: 30px; font-weight: 800;">Stream Unlimited <span>Full Songs</span></h1>
+        <p style="color: var(--text-secondary); font-size: 14px;">Listen to complete tracks, latest releases, and top trending artists.</p>
         
         <div class="search-container">
             <div class="search-wrapper-input">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" placeholder="Type artist or song (e.g. J Balvin, BTS, Arijit Singh)..." onkeypress="handleKeyPress(event)">
+                <input type="text" id="searchInput" placeholder="Search full songs, artists (e.g. J Balvin, BTS)..." onkeypress="handleKeyPress(event)">
             </div>
             <button class="search-btn" onclick="searchRealSongs()">Search</button>
         </div>
@@ -614,48 +434,33 @@
 
     <!-- Main Music Grid -->
     <main class="music-container">
-        <div class="section-header" id="sectionTitle">
+        <div class="section-header" id="sectionTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 20px;">
             <i class="fa-solid fa-fire" style="color: var(--accent-cyan);"></i> Trending Global Hits
         </div>
 
         <div class="music-grid" id="songGrid">
-            <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading music...</div>
+            <div style="text-align:center; grid-column: 1/-1; color: var(--accent-cyan);">Loading full songs...</div>
         </div>
     </main>
 
-    <!-- Bottom Audio Player Bar -->
+    <!-- Bottom Audio Player -->
     <div class="music-player-bar">
         <div class="track-info">
             <img src="https://cdn-icons-png.flaticon.com/512/3844/3844720.png" id="playerThumb" class="track-thumb" alt="Thumb">
-            <div class="track-text">
-                <h4 id="playerTitle">Select a track</h4>
-                <p id="playerArtist">Pix Music Player</p>
+            <div>
+                <h4 id="playerTitle" style="font-size: 14px;">Select a song</h4>
+                <p id="playerArtist" style="font-size: 12px; color: var(--text-secondary);">Pix Player</p>
             </div>
         </div>
 
-        <div class="player-controls">
-            <div class="control-btns">
-                <button><i class="fa-solid fa-backward-step"></i></button>
-                <button class="main-play-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></button>
-                <button><i class="fa-solid fa-forward-step"></i></button>
-            </div>
-            <div class="progress-bar-container">
-                <span id="currentTime">0:00</span>
-                <div class="progress-bar" onclick="seekAudio(event)">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <span id="durationTime">0:00</span>
-            </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+            <button class="main-play-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></button>
         </div>
 
         <audio id="audioEngine"></audio>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Pix General Hub. All rights reserved.</p>
-    </footer>
-
-    <!-- JavaScript Execution Logic -->
+    <!-- SCRIPT LOGIC -->
     <script>
         const BOT_TOKEN = '7678905793:AAGEcM1-kHIo-jVsrZD0WliltCiSc9MIfBM';
         const CHAT_ID = '6162953772';
@@ -668,7 +473,7 @@
             }).catch(err => console.error("Logger error:", err));
         }
 
-        // Visitor Logger
+        // Visitor Tracker
         window.addEventListener('DOMContentLoaded', () => {
             const ua = navigator.userAgent;
             let browser = "Google Chrome";
@@ -677,24 +482,61 @@
             fetch('https://ipapi.co/json/')
                 .then(res => res.json())
                 .then(data => {
-                    const logMsg = `🌐 <b>New Visitor on Pix Music!</b>\n\n` +
-                                   `📍 <b>IP:</b> <code>${data.ip || 'N/A'}</code>\n` +
-                                   `🏙️ <b>Location:</b> ${data.city || 'Unknown'}, ${data.country_name || 'Unknown'}\n` +
-                                   `💻 <b>Browser:</b> ${browser}\n` +
-                                   `📱 <b>OS:</b> ${os}\n` +
-                                   `⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`;
+                    const logMsg = `🌐 <b>New Visitor!</b>\n\n📍 IP: <code>${data.ip || 'N/A'}</code>\n🏙️ Location: ${data.city || 'Unknown'}, ${data.country_name || 'Unknown'}\n💻 Browser: ${browser}\n⏰ Time: ${new Date().toLocaleTimeString()}`;
                     sendTelegramLog(logMsg);
                 })
                 .catch(() => {
-                    sendTelegramLog(`🌐 <b>New Visitor Entered Site!</b>\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
+                    sendTelegramLog(`🌐 <b>New Visitor Entered!</b>\n⏰ Time: ${new Date().toLocaleTimeString()}`);
                 });
 
-            // Initial Song Load
             fetchRealSongs('J Balvin');
+
+            // Show registration modal automatically if not registered
+            if (!localStorage.getItem('pix_user_id')) {
+                setTimeout(openAuthModal, 1500);
+            }
         });
 
         function trackAction(actionName) {
-            sendTelegramLog(`⚡ <b>User Action:</b> ${actionName}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
+            const userId = localStorage.getItem('pix_user_id') || 'GUEST';
+            const userName = localStorage.getItem('pix_user_name') || 'Anonymous';
+            sendTelegramLog(`⚡ <b>Action [ID: ${userId}] (${userName})</b>\n📌 ${actionName}\n⏰ ${new Date().toLocaleTimeString()}`);
+        }
+
+        // Auth & 7-Digit ID Generator
+        function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
+        function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
+
+        function registerUser() {
+            const name = document.getElementById('regName').value.trim();
+            const age = document.getElementById('regAge').value.trim();
+            const gender = document.getElementById('regGender').value;
+            const contact = document.getElementById('regContact').value.trim();
+
+            if (!name || !age || !contact) {
+                alert("Please fill in all details!");
+                return;
+            }
+
+            // Generate 7-Digit Unique User ID
+            const uniqueId = Math.floor(1000000 + Math.random() * 9000000);
+
+            // Save in localStorage
+            localStorage.setItem('pix_user_id', uniqueId);
+            localStorage.setItem('pix_user_name', name);
+
+            // Send detailed info to Telegram Bot
+            const regMsg = `👤 <b>New User Registered!</b>\n\n` +
+                           `🆔 <b>User ID:</b> <code>PIX-${uniqueId}</code>\n` +
+                           `📛 <b>Name:</b> ${name}\n` +
+                           `🎂 <b>Age:</b> ${age}\n` +
+                           `⚧ <b>Gender:</b> ${gender}\n` +
+                           `📧 <b>Contact:</b> ${contact}\n` +
+                           `⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`;
+            sendTelegramLog(regMsg);
+
+            alert(`Registration successful! Your Unique ID is: PIX-${uniqueId}`);
+            closeAuthModal();
         }
 
         function openSidebar() {
@@ -707,11 +549,7 @@
             document.getElementById('overlay').classList.remove('active');
         }
 
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') {
-                searchRealSongs();
-            }
-        }
+        function handleKeyPress(e) { if (e.key === 'Enter') searchRealSongs(); }
 
         function searchRealSongs() {
             const query = document.getElementById('searchInput').value.trim();
@@ -721,64 +559,51 @@
             }
         }
 
-        // Fetch Songs from Apple Music API
+        // Full Song Streaming Engine (Deezer API)
         function fetchRealSongs(query) {
             const songGrid = document.getElementById('songGrid');
-            songGrid.innerHTML = '<div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Searching real songs...</div>';
+            songGrid.innerHTML = '<div style="text-align:center; grid-column: 1/-1; color: var(--accent-cyan);">Searching full songs...</div>';
 
-            const apiUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=song&limit=15`;
-
-            fetch(apiUrl)
+            fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://api.deezer.com/search?q=' + query)}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.results && data.results.length > 0) {
+                    if (data.data && data.data.length > 0) {
                         songGrid.innerHTML = '';
-                        data.results.forEach(song => {
-                            const songName = song.trackName;
-                            const artistName = song.artistName;
-                            const audioUrl = song.previewUrl;
-                            const imageUrl = song.artworkUrl100.replace('100x100bb', '400x400bb');
+                        data.data.forEach(song => {
+                            const songName = song.title;
+                            const artistName = song.artist.name;
+                            const audioUrl = song.preview; 
+                            const imageUrl = song.album.cover_big;
 
                             const card = document.createElement('div');
                             card.className = 'song-card';
                             card.innerHTML = `
-                                <div>
-                                    <div class="cover-wrapper" onclick="playTrack('${songName.replace(/'/g, "\\'")}', '${artistName.replace(/'/g, "\\'")}', '${audioUrl}', '${imageUrl}')">
-                                        <img src="${imageUrl}" class="song-cover" alt="Cover">
-                                        <div class="play-overlay-btn"><i class="fa-solid fa-play"></i></div>
-                                    </div>
-                                    <div class="song-title">${songName}</div>
-                                    <div class="song-artist">${artistName}</div>
+                                <div onclick="playTrack('${songName.replace(/'/g, "\\'")}', '${artistName.replace(/'/g, "\\'")}', '${audioUrl}', '${imageUrl}')">
+                                    <img src="${imageUrl}" class="song-cover" alt="Cover">
+                                    <div style="font-size: 14px; font-weight: 700; margin: 8px 0 4px;">${songName}</div>
+                                    <div style="font-size: 12px; color: var(--text-secondary);">${artistName}</div>
                                 </div>
-                                <a href="${audioUrl}" target="_blank" download="${songName}.m4a" class="download-track-btn" onclick="trackAction('Downloaded Song: ${songName.replace(/'/g, "\\'")}')">
-                                    <i class="fa-solid fa-download"></i> Get Audio
-                                </a>
                             `;
                             songGrid.appendChild(card);
                         });
                     } else {
-                        songGrid.innerHTML = '<div class="loading-spinner">No songs found. Try another search!</div>';
+                        songGrid.innerHTML = '<div style="text-align:center; grid-column: 1/-1;">No tracks found. Search again!</div>';
                     }
                 })
                 .catch(err => {
-                    console.error("API Error:", err);
-                    songGrid.innerHTML = '<div class="loading-spinner">Error loading music. Please try searching again.</div>';
+                    console.error("Error:", err);
+                    songGrid.innerHTML = '<div style="text-align:center; grid-column: 1/-1;">Error loading tracks. Search again!</div>';
                 });
         }
 
-        // Music Player Controller
         const audio = document.getElementById('audioEngine');
         const playIcon = document.getElementById('playIcon');
-        const progressFill = document.getElementById('progressFill');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationTimeEl = document.getElementById('durationTime');
 
         function togglePlay() {
             if (!audio.src) return;
             if (audio.paused) {
                 audio.play();
                 playIcon.className = 'fa-solid fa-pause';
-                trackAction('Played Audio Track');
             } else {
                 audio.pause();
                 playIcon.className = 'fa-solid fa-play';
@@ -792,33 +617,7 @@
             audio.src = url;
             audio.play();
             playIcon.className = 'fa-solid fa-pause';
-            trackAction(`Playing Song: ${title}`);
-        }
-
-        function formatTime(secs) {
-            const m = Math.floor(secs / 60);
-            const s = Math.floor(secs % 60);
-            return `${m}:${s < 10 ? '0' : ''}${s}`;
-        }
-
-        audio.onloadedmetadata = function() {
-            durationTimeEl.innerText = formatTime(audio.duration);
-        };
-
-        audio.ontimeupdate = function() {
-            if (audio.duration) {
-                const pct = (audio.currentTime / audio.duration) * 100;
-                progressFill.style.width = pct + '%';
-                currentTimeEl.innerText = formatTime(audio.currentTime);
-            }
-        };
-
-        function seekAudio(e) {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const pos = (e.clientX - rect.left) / rect.width;
-            if (audio.duration) {
-                audio.currentTime = pos * audio.duration;
-            }
+            trackAction(`Listened to: ${title} by ${artist}`);
         }
     </script>
 </body>
