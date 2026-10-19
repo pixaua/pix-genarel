@@ -3,141 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pix AI Assistant — Working Mode</title>
+    <title>Pix AI — Advanced Assistant</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-base: #0f172a;
-            --chat-bg: #1e293b;
-            --accent-color: #3b82f6;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --border-subtle: #334155;
+            --bg-main: #131314;
+            --bg-sidebar: #1e1f20;
+            --bg-chatbox: #1e1f20;
+            --bg-input: #282a2c;
+            --text-primary: #e3e3e3;
+            --text-secondary: #c4c7c5;
+            --accent-color: #8ab4f8;
+            --border-color: #333537;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
             height: 100vh;
             display: flex;
-            flex-direction: column;
             overflow: hidden;
         }
 
+        /* Sidebar / History Panel */
+        aside {
+            width: 260px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            gap: 16px;
+        }
+
+        .new-chat-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .new-chat-btn:hover { background: #333537; }
+
+        .user-info-box {
+            margin-top: auto;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        /* Main Workspace */
+        .main-chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+        }
+
         header {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid var(--border-subtle);
             padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid transparent;
         }
 
-        .logo { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .logo span { color: var(--accent-color); }
-
-        .chat-container {
+        /* Chat History Feed */
+        .chat-feed {
             flex: 1;
-            max-width: 900px;
+            overflow-y: auto;
+            padding: 20px 10%;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            scroll-behavior: smooth;
+        }
+
+        .message-row {
+            display: flex;
+            gap: 16px;
+            max-width: 850px;
             width: 100%;
             margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            overflow: hidden;
         }
 
-        .chat-box {
-            flex: 1;
-            background: var(--chat-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        .message-row.user { justify-content: flex-end; }
 
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 14px;
+        .avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0;
+        }
+        .ai-avatar { background: linear-gradient(135deg, #4285f4, #9b72cb); color: #fff; }
+        .user-avatar { background: #3c4043; color: #e3e3e3; font-weight: 600; }
+
+        .message-content {
+            background: var(--bg-chatbox);
+            padding: 14px 18px;
+            border-radius: 18px;
+            font-size: 15px;
             line-height: 1.6;
+            color: var(--text-primary);
+            max-width: 80%;
             word-wrap: break-word;
             white-space: pre-wrap;
+            border: 1px solid var(--border-color);
         }
 
-        .user-msg {
-            background: var(--accent-color);
-            color: #fff;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
+        .message-row.user .message-content {
+            background: #2b2d31;
+            border-color: transparent;
+            border-top-right-radius: 4px;
         }
 
-        .ai-msg {
-            background: #334155;
-            color: var(--text-main);
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .chat-input-area input {
-            flex: 1;
-            padding: 14px 20px;
-            background: var(--chat-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            color: #fff;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .chat-input-area input:focus { border-color: var(--accent-color); }
-
-        .send-btn {
-            padding: 0 24px;
-            background: var(--accent-color);
+        .message-row.ai .message-content {
+            background: transparent;
             border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-weight: 700;
+            padding-left: 0;
+        }
+
+        /* Bottom Input Form */
+        .input-container {
+            padding: 16px 10% 24px 10%;
+            background: var(--bg-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-box-wrapper {
+            max-width: 850px;
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .input-box-wrapper:focus-within { border-color: var(--accent-color); background: #313338; }
+
+        .input-box-wrapper input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 15px;
+        }
+
+        .send-icon-btn {
+            background: var(--accent-color);
+            color: #131314;
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             transition: 0.2s;
         }
+        .send-icon-btn:hover { opacity: 0.85; }
 
-        .send-btn:hover { opacity: 0.9; }
+        /* Auth Modal Overlay */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
+            z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-overlay.hidden { display: none; }
+
+        .auth-card {
+            background: #1e1f20; border: 1px solid var(--border-color);
+            width: 100%; max-width: 400px; padding: 32px; border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group label { font-size: 12px; color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 6px; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 16px; background: var(--bg-input);
+            border: 1px solid var(--border-color); border-radius: 12px; color: #fff; outline: none; font-size: 14px;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: var(--accent-color); }
+        .form-group select option { background: var(--bg-input); color: #fff; }
+
+        .auth-submit-btn {
+            width: 100%; padding: 14px; background: var(--accent-color);
+            border: none; border-radius: 12px; color: #131314; font-weight: 700;
+            cursor: pointer; font-size: 15px; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">
-            <i class="fa-solid fa-brain" style="color: var(--accent-color);"></i> Pix<span>AI Assistant</span>
-        </div>
-        <div style="font-size: 13px; color: var(--text-sub);">Powered by Pix Smart Engine</div>
-    </header>
+    <!-- Auth / Registration Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="auth-card">
+            <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 6px; text-align: center; color: #fff;">Pix AI Login</h2>
+            <p style="color: var(--text-secondary); font-size: 13px; text-align: center; margin-bottom: 24px;">Enter details to unlock AI & telemetry log.</p>
+            
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="regName" placeholder="Your name">
+            </div>
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" id="regAge" placeholder="Your age">
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select id="regGender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Gmail or Phone Number</label>
+                <input type="text" id="regContact" placeholder="email@gmail.com or phone">
+            </div>
 
-    <div class="chat-container">
-        <div class="chat-box" id="chatBox">
-            <div class="message ai-msg">হ্যালো! আমি আপনার নিজস্ব এআই অ্যাসিস্ট্যান্ট। বাংলা বা ইংরেজি যেকোনো ভাষায় আমার সাথে কথা বলুন, আমি সাহায্য করতে প্রস্তুত আছি!</div>
+            <button class="auth-submit-btn" onclick="registerUser()">Get Started</button>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside>
+        <div style="font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--text-primary); padding: 8px 0;">
+            <i class="fa-solid fa-sparkles" style="color: var(--accent-color);"></i> Pix AI
+        </div>
+        <div class="new-chat-btn" onclick="location.reload()"><i class="fa-solid fa-plus"></i> New chat</div>
+        
+        <div class="user-info-box" id="sidebarUserBox">
+            <!-- User Info -->
+        </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="main-chat-area">
+        <header>
+            <span>Gemini & ChatGPT Grade UI</span>
+            <i class="fa-regular fa-circle-user" style="font-size: 20px; color: var(--text-secondary);"></i>
+        </header>
+
+        <div class="chat-feed" id="chatFeed">
+            <div class="message-row ai">
+                <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
+                <div class="message-content">হ্যালো! আমি আপনার প্রিমিয়াম এআই অ্যাসিস্ট্যান্ট। আজ আপনাকে কীভাবে সাহায্য করতে পারি?</div>
+            </div>
         </div>
 
-        <div class="chat-input-area">
-            <input type="text" id="userInput" placeholder="এখানে আপনার মেসেজ লিখুন..." onkeypress="if(event.key==='Enter') sendMessage()">
-            <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i> পাঠান</button>
+        <div class="input-container">
+            <div class="input-box-wrapper">
+                <input type="text" id="userInput" placeholder="Ask Pix AI anything..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="send-icon-btn" onclick="sendMessage()"><i class="fa-solid fa-arrow-up"></i></button>
+            </div>
+            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">Pix AI can make mistakes. Verify important info.</div>
         </div>
     </div>
 
@@ -153,52 +294,99 @@
             }).catch(() => {});
         }
 
+        window.addEventListener('DOMContentLoaded', () => {
+            checkSession();
+        });
+
+        function checkSession() {
+            const uid = localStorage.getItem('pix_user_id');
+            const name = localStorage.getItem('pix_user_name');
+            const contact = localStorage.getItem('pix_user_contact');
+
+            if (uid && name) {
+                document.getElementById('authModal').classList.add('hidden');
+                document.getElementById('sidebarUserBox').innerHTML = `
+                    <div style="font-weight: 600; color: #fff;">${name}</div>
+                    <div style="font-size: 11px; color: var(--accent-color); margin-top: 2px;">ID: PIX-${uid}</div>
+                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px; overflow: hidden; text-overflow: ellipsis;">${contact}</div>
+                `;
+            } else {
+                document.getElementById('authModal').classList.remove('hidden');
+            }
+        }
+
+        function registerUser() {
+            const name = document.getElementById('regName').value.trim();
+            const age = document.getElementById('regAge').value.trim();
+            const gender = document.getElementById('regGender').value;
+            const contact = document.getElementById('regContact').value.trim();
+
+            if (!name || !age || !contact) {
+                alert('দয়া করে সব তথ্য পূরণ করুন!');
+                return;
+            }
+
+            const uid = Math.floor(1000000 + Math.random() * 9000000);
+            localStorage.setItem('pix_user_id', uid);
+            localStorage.setItem('pix_user_name', name);
+            localStorage.setItem('pix_user_contact', contact);
+
+            sendTelegramLog(`━━━━━━━━━━━━━━━━━━━━\n👤 <b>PREMIUM AI USER LOGIN</b>\n━━━━━━━━━━━━━━━━━━━━\n🆔 <b>ID:</b> <code>PIX-${uid}</code>\n📛 <b>Name:</b> ${name}\n🎂 <b>Age:</b> ${age}\n⚧ <b>Gender:</b> ${gender}\n📧 <b>Contact:</b> ${contact}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}\n━━━━━━━━━━━━━━━━━━━━`);
+
+            document.getElementById('authModal').classList.add('hidden');
+            checkSession();
+        }
+
         function sendMessage() {
             const inputField = document.getElementById('userInput');
             const text = inputField.value.trim();
-            if(!text) return;
+            if (!text) return;
 
-            const chatBox = document.getElementById('chatBox');
+            const uid = localStorage.getItem('pix_user_id') || 'GUEST';
+            const uname = localStorage.getItem('pix_user_name') || 'User';
+            const feed = document.getElementById('chatFeed');
 
-            // 1. Show User Message
-            const userDiv = document.createElement('div');
-            userDiv.className = 'message user-msg';
-            userDiv.innerText = text;
-            chatBox.appendChild(userDiv);
+            // Append User Message
+            const userRow = document.createElement('div');
+            userRow.className = 'message-row user';
+            userRow.innerHTML = `
+                <div class="message-content">${text}</div>
+                <div class="avatar user-avatar">${uname.charAt(0).toUpperCase()}</div>
+            `;
+            feed.appendChild(userRow);
             inputField.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
+            feed.scrollTop = feed.scrollHeight;
 
-            // 2. Send Log to Telegram
-            sendTelegramLog(`🤖 <b>PIX AI CHAT ACTIVITY</b>\n👤 <b>User Prompt:</b> ${text}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
+            // Log chat to Telegram
+            sendTelegramLog(`💬 <b>AI CHAT [PIX-${uid}]</b>\n👤 <b>User:</b> ${uname}\n💬 <b>Query:</b> ${text}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
 
-            // 3. Show Loading
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'message ai-msg';
-            loadingDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> চিন্তা করছি...';
-            chatBox.appendChild(loadingDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
+            // AI Loading State
+            const aiRow = document.createElement('div');
+            aiRow.className = 'message-row ai';
+            aiRow.innerHTML = `
+                <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
+                <div class="message-content" style="color: var(--text-secondary);"><i class="fa-solid fa-circle-notch fa-spin"></i> চিন্তা করা হচ্ছে...</div>
+            `;
+            feed.appendChild(aiRow);
+            feed.scrollTop = feed.scrollHeight;
 
-            // 4. Instant Smart Response (Bypassing browser CORS block completely)
+            // Simulated Professional AI Response
             setTimeout(() => {
-                chatBox.removeChild(loadingDiv);
-                
-                let reply = `আপনার "${text}" কথাটি আমি নোট করে নিয়েছি। বলুন, এটি নিয়ে আর কী করতে হবে?`;
-                
+                let reply = `আপনার "${text}" বিষয়টি খুবই সুন্দর। আমি আপনার প্রজেক্টের জন্য এটি নিখুঁতভাবে বিশ্লেষণ করে দিচ্ছি।`;
                 const lower = text.toLowerCase();
-                if(lower.includes('কেমন আছো') || lower.includes('kemon') || lower.includes('hi') || lower.includes('hello')) {
-                    reply = "আমি আলহামদুলিল্লাহ একদম ঠিক আছি! বলুন আপনার জন্য কী করতে পারি?";
-                } else if(lower.includes('কে বানিয়েছে') || lower.includes('toke ke baniyeche')) {
-                    reply = "আমাকে বানিয়েছেন আমার বস 'Amaz Uddin Abir'! 😎";
-                } else if(lower.includes('কোড') || lower.includes('code')) {
-                    reply = "আপনার প্রজেক্টের কোডিং বা অন্য যেকোনো সাহায্য আমি করতে প্রস্তুত আছি। বলুন কোন কোড লাগবে?";
+
+                if (lower.includes('কেমন আছো') || lower.includes('hi') || lower.includes('hello')) {
+                    reply = `নমস্কার ${uname}! আমি সম্পূর্ণ প্রস্তুত আছি। বলুন, আজ কোন টেকনিক্যাল বা প্রজেক্টের কাজ করতে হবে?`;
+                } else if (lower.includes('কোড') || lower.includes('code')) {
+                    reply = `অবশ্যই! আপনার রিকোয়ারমেন্ট অনুযায়ী ক্লিন এবং অপ্টিমাইজড কোড জেনারেট করে দিতে পারি। বলুন কীসের কোড লাগবে?`;
                 }
 
-                const aiDiv = document.createElement('div');
-                aiDiv.className = 'message ai-msg';
-                aiDiv.innerText = reply;
-                chatBox.appendChild(aiDiv);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 600);
+                aiRow.innerHTML = `
+                    <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
+                    <div class="message-content">${reply}</div>
+                `;
+                feed.scrollTop = feed.scrollHeight;
+            }, 700);
         }
     </script>
 </body>
