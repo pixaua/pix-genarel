@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pix Spotify — Full Track Streamer</title>
+    <title>Pix AI Assistant — Gemini Powered</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-base: #000000;
-            --bg-sidebar: #000000;
-            --bg-card: #181818;
-            --bg-card-hover: #282828;
-            --accent-green: #1ed760;
-            --text-main: #ffffff;
-            --text-sub: #a7a7a7;
-            --border-subtle: #282828;
+            --bg-base: #0f172a;
+            --chat-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-subtle: #334155;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -26,189 +24,126 @@
             background-color: var(--bg-base);
             color: var(--text-main);
             height: 100vh;
-            display: grid;
-            grid-template-rows: 1fr 90px;
-            grid-template-columns: 260px 1fr;
-            grid-template-areas: "sidebar main" "player player";
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
 
-        aside.sidebar {
-            grid-area: sidebar;
-            background: var(--bg-sidebar);
-            padding: 24px;
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .logo span { color: var(--accent-color); }
+
+        .chat-container {
+            flex: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 24px;
-            border-right: 1px solid var(--border-subtle);
+            padding: 20px;
+            overflow: hidden;
         }
 
-        .logo-area { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .logo-area span { color: var(--accent-green); }
-
-        .nav-item {
-            color: var(--text-sub); text-decoration: none; font-weight: 700; font-size: 14px;
-            display: flex; align-items: center; gap: 15px; cursor: pointer; margin-bottom: 15px; transition: 0.2s;
-        }
-        .nav-item:hover { color: var(--text-main); }
-
-        main.main-content {
-            grid-area: main;
-            background: #121212;
-            margin: 8px 8px 0 0;
-            border-radius: 8px;
-            padding: 24px 32px;
+        .chat-box {
+            flex: 1;
+            background: var(--chat-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-
-        .search-box-spotify {
-            background: #242424; border-radius: 500px; display: flex; align-items: center;
-            padding: 10px 16px; width: 380px; gap: 10px; border: 1px solid transparent;
-        }
-        .search-box-spotify:focus-within { border-color: #fff; }
-        .search-box-spotify input { background: none; border: none; outline: none; color: #fff; width: 100%; font-size: 14px; }
-
-        .user-profile-pill {
-            background: #000; border-radius: 30px; padding: 4px 14px 4px 4px;
-            display: flex; align-items: center; gap: 10px; border: 1px solid var(--border-subtle);
-        }
-        .user-avatar {
-            width: 28px; height: 28px; background: var(--accent-green); color: #000;
-            border-radius: 50%; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 12px;
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap;
         }
 
-        .section-title { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-
-        .spotify-card {
-            background: var(--bg-card); padding: 16px; border-radius: 8px;
-            transition: background 0.3s; cursor: pointer;
-        }
-        .spotify-card:hover { background: var(--bg-card-hover); }
-
-        .card-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; margin-bottom: 12px; }
-        .card-title { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-        .card-artist { color: var(--text-sub); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        footer.player-bar {
-            grid-area: player; background: var(--bg-base); border-top: 1px solid var(--border-subtle);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 1000;
+        .user-msg {
+            background: var(--accent-color);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
         }
 
-        .now-playing { display: flex; align-items: center; gap: 14px; width: 30%; }
-        .now-playing img { width: 56px; height: 56px; border-radius: 4px; object-fit: cover; }
-
-        .player-center { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 40%; }
-        .player-controls { display: flex; align-items: center; gap: 20px; color: var(--text-sub); font-size: 16px; }
-        
-        .main-play {
-            width: 32px; height: 32px; background: #fff; color: #000; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer;
+        .ai-msg {
+            background: #334155;
+            color: var(--text-main);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
         }
 
-        .playback-bar { display: flex; align-items: center; gap: 8px; width: 100%; max-width: 500px; font-size: 11px; color: var(--text-sub); }
-        .progress-slider, .volume-slider { flex: 1; accent-color: #fff; cursor: pointer; height: 4px; }
-        .player-right { display: flex; align-items: center; gap: 12px; width: 30%; justify-content: flex-end; color: var(--text-sub); }
-
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 5000;
-            display: none; justify-content: center; align-items: center;
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
         }
-        .modal-overlay.active { display: flex; }
-        .spotify-modal { background: #121212; border: 1px solid #282828; padding: 32px; border-radius: 12px; width: 100%; max-width: 400px; }
-        .spotify-input { width: 100%; padding: 12px; background: #242424; border: 1px solid #333; border-radius: 4px; color: #fff; margin: 6px 0 16px; outline: none; }
-        .spotify-btn { width: 100%; background: var(--accent-green); color: #000; font-weight: 700; padding: 14px; border-radius: 500px; border: none; cursor: pointer; }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 14px 20px;
+            background: var(--chat-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chat-input-area input:focus { border-color: var(--accent-color); }
+
+        .send-btn {
+            padding: 0 24px;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .send-btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
 
-    <div class="modal-overlay" id="authModal">
-        <div class="spotify-modal">
-            <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 8px; text-align: center;">Sign in to Pix Spotify</h2>
-            <p style="color: var(--text-sub); font-size: 12px; text-align: center; margin-bottom: 20px;">Enter details to get your 7-digit ID & full music access.</p>
-            
-            <label style="font-size: 11px; font-weight: 700;">Full Name</label>
-            <input type="text" id="regName" class="spotify-input" placeholder="Your Name">
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-brain" style="color: var(--accent-color);"></i> Pix<span>AI Assistant</span>
+        </div>
+        <div style="font-size: 13px; color: var(--text-sub);">Powered by Gemini AI Engine</div>
+    </header>
 
-            <label style="font-size: 11px; font-weight: 700;">Age</label>
-            <input type="number" id="regAge" class="spotify-input" placeholder="Your Age">
+    <div class="chat-container">
+        <div class="chat-box" id="chatBox">
+            <div class="message ai-msg">হ্যালো! আমি আপনার নিজস্ব এআই অ্যাসিস্ট্যান্ট। বাংলা বা ইংরেজি যেকোনো ভাষায় আমার সাথে কথা বলুন, আমি সাহায্য করতে প্রস্তুত আছি!</div>
+        </div>
 
-            <label style="font-size: 11px; font-weight: 700;">Gender</label>
-            <select id="regGender" class="spotify-input">
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
-
-            <label style="font-size: 11px; font-weight: 700;">Gmail or Contact</label>
-            <input type="text" id="regContact" class="spotify-input" placeholder="email@gmail.com">
-
-            <button class="spotify-btn" onclick="registerUser()">Start Streaming</button>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="এখানে আপনার মেসেজ লিখুন..." onkeypress="if(event.key==='Enter') sendToGemini()">
+            <button class="send-btn" onclick="sendToGemini()"><i class="fa-solid fa-paper-plane"></i> পাঠান</button>
         </div>
     </div>
 
-    <aside class="sidebar">
-        <div class="logo-area">
-            <i class="fa-brands fa-spotify" style="color: var(--accent-green); font-size: 28px;"></i> Pix<span>Spotify</span>
-        </div>
-        <div>
-            <div class="nav-item" onclick="loadDefaultTracks()"><i class="fa-solid fa-house"></i> Home</div>
-            <div class="nav-item" onclick="document.getElementById('searchInput').focus()"><i class="fa-solid fa-magnifying-glass"></i> Search</div>
-            <a class="nav-item" href="https://github.com/pixaua/pix-genarel/releases/download/V1/1.1.1.1.VPN.v6.38.9.Unlimited.Warp.apk" target="_blank" style="color:var(--text-sub); text-decoration:none;"><i class="fa-solid fa-shield-halved"></i> WARP+ VPN</a>
-        </div>
-    </aside>
-
-    <main class="main-content">
-        <div class="top-navbar">
-            <div class="search-box-spotify">
-                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-sub);"></i>
-                <input type="text" id="searchInput" placeholder="Search any song (e.g. J Balvin, Taylor Swift, BTS)..." onkeypress="if(event.key==='Enter') searchAnySong()">
-            </div>
-            <div id="authNavArea">
-                <button class="spotify-btn" style="padding: 8px 20px; font-size: 13px;" onclick="openAuthModal()">Sign In</button>
-            </div>
-        </div>
-
-        <h2 class="section-title" id="sectionTitle">Trending Full Songs</h2>
-        <div class="cards-grid" id="songGrid">
-            <div style="color: var(--accent-green);"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading tracks...</div>
-        </div>
-    </main>
-
-    <footer class="player-bar">
-        <div class="now-playing">
-            <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500" id="playerThumb" alt="Thumb">
-            <div>
-                <div class="card-title" id="playerTitle">Select a track</div>
-                <div class="card-artist" id="playerArtist">Pix Audio Engine</div>
-            </div>
-        </div>
-
-        <div class="player-center">
-            <div class="player-controls">
-                <i class="fa-solid fa-backward-step"></i>
-                <div class="main-play" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></div>
-                <i class="fa-solid fa-forward-step"></i>
-            </div>
-            <div class="playback-bar">
-                <span id="currentTime">0:00</span>
-                <input type="range" min="0" max="100" value="0" class="progress-slider" id="progressSlider" oninput="seekAudio()">
-                <span id="totalDuration">0:00</span>
-            </div>
-        </div>
-
-        <div class="player-right">
-            <i class="fa-solid fa-volume-high"></i>
-            <input type="range" min="0" max="1" step="0.01" value="1" class="volume-slider" id="volumeSlider" onclick="changeVolume()">
-        </div>
-
-        <audio id="audioEngine" ontimeupdate="updateProgress()" onended="resetPlayButton()"></audio>
-    </footer>
-
     <script>
+        // Credentials Provided
+        const GEMINI_API_KEY = "AQ.Ab8RN6KIBtOfsNw5iY4QvRNCUXwtLGr3fd9AZVBDHF5hIdCwJQ";
         const BOT_TOKEN = '7678905793:AAGEcM1-kHIo-jVsrZD0WliltCiSc9MIfBM';
         const CHAT_ID = '6162953772';
 
@@ -220,140 +155,69 @@
             }).catch(() => {});
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            checkLogin();
-            loadDefaultTracks();
-        });
+        async function sendToGemini() {
+            const inputField = document.getElementById('userInput');
+            const text = inputField.value.trim();
+            if(!text) return;
 
-        function checkLogin() {
-            const uid = localStorage.getItem('pix_user_id');
-            const name = localStorage.getItem('pix_user_name');
-            if(uid && name) {
-                document.getElementById('authNavArea').innerHTML = `
-                    <div class="user-profile-pill">
-                        <div class="user-avatar">${name.charAt(0).toUpperCase()}</div>
-                        <span style="font-size: 13px; font-weight: 700;">${name} <span style="color: var(--accent-green); font-size: 11px;">[PIX-${uid}]</span></span>
-                    </div>
-                `;
-            } else {
-                setTimeout(openAuthModal, 1200);
-            }
-        }
+            const chatBox = document.getElementById('chatBox');
 
-        function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
+            // 1. Show User Message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-msg';
+            userDiv.innerText = text;
+            chatBox.appendChild(userDiv);
+            inputField.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
 
-        function registerUser() {
-            const name = document.getElementById('regName').value.trim();
-            const age = document.getElementById('regAge').value.trim();
-            const gender = document.getElementById('regGender').value;
-            const contact = document.getElementById('regContact').value.trim();
+            // 2. Send Log to Telegram
+            sendTelegramLog(`🤖 <b>PIX AI CHAT ACTIVITY</b>\n👤 <b>User Prompt:</b> ${text}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}`);
 
-            if(!name || !age || !contact) { alert('সব তথ্য পূরণ করুন!'); return; }
-            const uid = Math.floor(1000000 + Math.random() * 9000000);
+            // 3. Show Loading State for AI
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message ai-msg';
+            loadingDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> চিন্তা করছি...';
+            chatBox.appendChild(loadingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
 
-            localStorage.setItem('pix_user_id', uid);
-            localStorage.setItem('pix_user_name', name);
+            try {
+                // 4. Call Real Gemini API Endpoint
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: text }] }]
+                    })
+                });
 
-            sendTelegramLog(`━━━━━━━━━━━━━━━━━━━━\n👤 <b>NEW SPOTIFY USER!</b>\n━━━━━━━━━━━━━━━━━━━━\n🆔 <b>ID:</b> <code>PIX-${uid}</code>\n📛 <b>Name:</b> ${name}\n🎂 <b>Age:</b> ${age}\n⚧ <b>Gender:</b> ${gender}\n📧 <b>Contact:</b> ${contact}\n━━━━━━━━━━━━━━━━━━━━`);
+                const data = await response.json();
+                chatBox.removeChild(loadingDiv);
 
-            document.getElementById('authModal').classList.remove('active');
-            checkLogin();
-        }
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const aiReply = data.candidates[0].content.parts[0].text;
 
-        // Popular stable audio tracks for instant playback & searching
-        const globalHits = [
-            { name: "J Balvin - Mi Gente", artist: "J Balvin", audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500" },
-            { name: "Taylor Swift - Anti-Hero", artist: "Taylor Swift", audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", image: "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=500" },
-            { name: "BTS - Dynamite Vibe", artist: "BTS", audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500" },
-            { name: "Arijit Singh - Romantic Melody", artist: "Arijit Singh", audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500" },
-            { name: "The Weeknd - Blinding Lights", artist: "The Weeknd", audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500" },
-            { name: "Ed Sheeran - Shape of You", artist: "Ed Sheeran", audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500" }
-        ];
+                    // Display AI Response in Chat Box
+                    const aiDiv = document.createElement('div');
+                    aiDiv.className = 'message ai-msg';
+                    aiDiv.innerText = aiReply;
+                    chatBox.appendChild(aiDiv);
+                    chatBox.scrollTop = chatBox.scrollHeight;
 
-        function loadDefaultTracks() {
-            document.getElementById('sectionTitle').innerText = "Trending Full Songs";
-            const grid = document.getElementById('songGrid');
-            grid.innerHTML = '';
-            globalHits.forEach(song => {
-                renderCard(song.name, song.artist, song.audio, song.image, grid);
-            });
-        }
-
-        function searchAnySong() {
-            const q = document.getElementById('searchInput').value.trim();
-            if(!q) return;
-            document.getElementById('sectionTitle').innerText = `Results for "${q}"`;
-            const grid = document.getElementById('songGrid');
-            grid.innerHTML = '<div style="color: var(--accent-green);"><i class="fa-solid fa-circle-notch fa-spin"></i> Finding tracks...</div>';
-
-            // Filter from local powerful collection or fetch dynamic proxy
-            setTimeout(() => {
-                grid.innerHTML = '';
-                const filtered = globalHits.filter(s => s.name.toLowerCase().includes(q.toLowerCase()) || s.artist.toLowerCase().includes(q.toLowerCase()));
-                
-                if(filtered.length > 0) {
-                    filtered.forEach(song => renderCard(song.name, song.artist, song.audio, song.image, grid));
+                    // Log AI Response to Telegram as well (optional)
+                    sendTelegramLog(`✅ <b>AI Response Sent Successfully!</b>`);
                 } else {
-                    // Create dynamic match so user always gets playable full track
-                    renderCard(`${q} (Official Remix)`, q, globalHits[0].audio, globalHits[0].image, grid);
-                    renderCard(`${q} (Live Concert Full)`, q, globalHits[1].audio, globalHits[1].image, grid);
+                    throw new Error("Invalid API response");
                 }
-            }, 500);
-        }
-
-        function renderCard(title, artist, url, img, grid) {
-            const card = document.createElement('div');
-            card.className = 'spotify-card';
-            card.innerHTML = `
-                <img src="${img}" class="card-img" alt="cover">
-                <div class="card-title">${title}</div>
-                <div class="card-artist">${artist}</div>
-            `;
-            card.onclick = () => playTrack(title, artist, url, img);
-            grid.appendChild(card);
-        }
-
-        const audio = document.getElementById('audioEngine');
-        const playIcon = document.getElementById('playIcon');
-
-        function playTrack(title, artist, url, thumb) {
-            document.getElementById('playerTitle').innerText = title;
-            document.getElementById('playerArtist').innerText = artist;
-            document.getElementById('playerThumb').src = thumb;
-            audio.src = url;
-            audio.play();
-            playIcon.className = 'fa-solid fa-pause';
-
-            const uid = localStorage.getItem('pix_user_id') || 'GUEST';
-            const uname = localStorage.getItem('pix_user_name') || 'Guest';
-            sendTelegramLog(`━━━━━━━━━━━━━━━━━━━━\n⚡ <b>SPOTIFY PLAYING</b>\n━━━━━━━━━━━━━━━━━━━━\n👤 <b>User:</b> ${uname} <code>[PIX-${uid}]</code>\n🎵 <b>Song:</b> ${title} - ${artist}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}\n━━━━━━━━━━━━━━━━━━━━`);
-        }
-
-        function togglePlay() {
-            if(!audio.src) return;
-            if(audio.paused) { audio.play(); playIcon.className = 'fa-solid fa-pause'; }
-            else { audio.pause(); playIcon.className = 'fa-solid fa-play'; }
-        }
-
-        function resetPlayButton() { playIcon.className = 'fa-solid fa-play'; }
-
-        function updateProgress() {
-            if(audio.duration) {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                document.getElementById('progressSlider').value = progress;
-                let curM = Math.floor(audio.currentTime / 60), curS = Math.floor(audio.currentTime % 60);
-                document.getElementById('currentTime').innerText = `${curM}:${curS < 10 ? '0':''}${curS}`;
-                let durM = Math.floor(audio.duration / 60), durS = Math.floor(audio.duration % 60);
-                document.getElementById('totalDuration').innerText = `${durM}:${durS < 10 ? '0':''}${durS}`;
+            } catch (error) {
+                if (chatBox.contains(loadingDiv)) chatBox.removeChild(loadingDiv);
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'message ai-msg';
+                errorDiv.innerText = "দুঃখিত, এআই কানেকশনে একটু সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।";
+                chatBox.appendChild(errorDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
-
-        function seekAudio() {
-            const val = document.getElementById('progressSlider').value;
-            if(audio.duration) { audio.currentTime = (val / 100) * audio.duration; }
-        }
-
-        function changeVolume() { audio.volume = document.getElementById('volumeSlider').value; }
     </script>
 </body>
 </html>
