@@ -31,6 +31,7 @@
             overflow: hidden;
         }
 
+        /* Sidebar */
         aside {
             width: 260px;
             background: var(--bg-sidebar);
@@ -46,7 +47,6 @@
             font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--text-primary); padding: 8px 0;
         }
         
-        /* Custom Premium Logo Design */
         .custom-gemini-logo {
             width: 28px; height: 28px;
             background: var(--accent-gradient);
@@ -81,6 +81,7 @@
             font-size: 13px;
         }
 
+        /* Main Workspace */
         .main-chat-area {
             flex: 1;
             display: flex;
@@ -92,7 +93,7 @@
         }
 
         header {
-            padding: 14px 20px;
+            padding: 14px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -105,6 +106,20 @@
 
         .header-logo-area { display: flex; align-items: center; gap: 10px; }
 
+        .model-selector {
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Chat Feed */
         .chat-feed {
             flex: 1;
             overflow-y: auto;
@@ -133,6 +148,13 @@
         .ai-avatar { background: var(--accent-gradient); color: #fff; }
         .user-avatar { background: #3c4043; color: #e3e3e3; font-weight: 600; }
 
+        .message-content-wrapper {
+            max-width: 82%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
         .message-content {
             background: var(--bg-chatbox);
             padding: 14px 18px;
@@ -140,7 +162,6 @@
             font-size: 15px;
             line-height: 1.7;
             color: var(--text-primary);
-            max-width: 82%;
             word-wrap: break-word;
             white-space: pre-wrap;
             border: 1px solid var(--border-color);
@@ -158,6 +179,23 @@
             padding-left: 0;
         }
 
+        /* Gemini Action Bar (Copy, Like, Dislike) */
+        .ai-action-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            padding-left: 2px;
+        }
+        .ai-action-bar i {
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 4px;
+        }
+        .ai-action-bar i:hover { color: #fff; }
+
+        /* Input Container */
         .input-container {
             padding: 16px 16px 24px 16px;
             background: var(--bg-main);
@@ -203,6 +241,7 @@
         }
         .send-icon-btn:hover { opacity: 0.85; }
 
+        /* Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
@@ -232,7 +271,8 @@
         @media (max-width: 768px) {
             aside { display: none; }
             .chat-feed { padding: 16px 12px; }
-            .message-content { max-width: 88%; font-size: 14.5px; }
+            .message-content-wrapper { max-width: 88%; }
+            .message-content { font-size: 14.5px; }
         }
     </style>
 </head>
@@ -286,13 +326,17 @@
                 <div class="custom-gemini-logo" style="width: 24px; height: 24px; font-size: 12px;">16</div>
                 <span>16 A</span>
             </div>
-            <div id="mobileUserBadge" style="font-size: 12px; color: #8ab4f8; font-weight: 600;"></div>
+            <div class="model-selector">
+                <i class="fa-solid fa-sparkles" style="color: #8ab4f8;"></i> Gemini 1.5 Flash
+            </div>
         </header>
 
         <div class="chat-feed" id="chatFeed">
             <div class="message-row ai">
                 <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
-                <div class="message-content">হ্যালো! আমি 16 A এআই অ্যাসিস্ট্যান্ট। বলুন আজ আপনাকে কীভাবে সাহায্য করতে পারি?</div>
+                <div class="message-content-wrapper">
+                    <div class="message-content">হ্যালো! আমি 16 A এআই অ্যাসিস্ট্যান্ট। বলুন আজ আপনাকে কীভাবে সাহায্য করতে পারি?</div>
+                </div>
             </div>
         </div>
 
@@ -301,7 +345,7 @@
                 <input type="text" id="userInput" placeholder="Ask 16 A anything..." onkeypress="if(event.key==='Enter') sendToGemini()">
                 <button class="send-icon-btn" onclick="sendToGemini()"><i class="fa-solid fa-arrow-up"></i></button>
             </div>
-            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 8px; text-align: center;">16 A AI Engine • Premium Experience</div>
+            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 8px; text-align: center;">16 A AI Engine • Official Experience</div>
         </div>
     </div>
 
@@ -332,7 +376,6 @@
                     <div style="font-size: 11px; color: #8ab4f8; margin-top: 2px;">ID: 16A-${uid}</div>
                     <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px; overflow: hidden; text-overflow: ellipsis;">${contact}</div>
                 `;
-                document.getElementById('mobileUserBadge').innerText = `${name} [16A-${uid}]`;
             } else {
                 document.getElementById('authModal').classList.remove('hidden');
             }
@@ -355,6 +398,17 @@
 
             document.getElementById('authModal').classList.add('hidden');
             checkSession();
+        }
+
+        function copyText(text, iconElem) {
+            navigator.clipboard.writeText(text);
+            iconElem.className = "fa-solid fa-check";
+            setTimeout(() => { iconElem.className = "fa-regular fa-copy"; }, 2000);
+        }
+
+        function handleFeedback(type, elem) {
+            elem.style.color = "#8ab4f8";
+            sendTelegramLog(`⭐ <b>FEEDBACK RECEIVED:</b> User gave a <b>${type}</b> response rating.`);
         }
 
         async function sendToGemini() {
@@ -380,19 +434,24 @@
             // 3. AI Loading State
             const aiRow = document.createElement('div');
             aiRow.className = 'message-row ai';
-            aiRow.innerHTML = `<div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div><div class="message-content" style="color: var(--text-secondary);"><i class="fa-solid fa-circle-notch fa-spin"></i> চিন্তা করা হচ্ছে...</div>`;
+            aiRow.innerHTML = `
+                <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
+                <div class="message-content-wrapper">
+                    <div class="message-content" style="color: var(--text-secondary);"><i class="fa-solid fa-circle-notch fa-spin"></i> চিন্তা করা হচ্ছে...</div>
+                </div>
+            `;
             feed.appendChild(aiRow);
             feed.scrollTop = feed.scrollHeight;
 
             try {
-                // 4. Call Real Gemini API with Correct System Instruction & Format
+                // 4. Call Real Gemini API
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         contents: [{
                             role: "user",
-                            parts: [{ text: `You are '16 A', a professional, highly intelligent AI assistant created by Amaz Uddin Abir. Respond accurately and naturally in Bengali or the requested language. User query: ${text}` }]
+                            parts: [{ text: `You are '16 A', a professional, highly intelligent AI assistant created by Amaz Uddin Abir. Respond accurately, naturally, and professionally in Bengali or the requested language. User query: ${text}` }]
                         }]
                     })
                 });
@@ -401,12 +460,22 @@
                 
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
                     const aiReply = data.candidates[0].content.parts[0].text;
-                    aiRow.innerHTML = `<div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div><div class="message-content">${aiReply}</div>`;
+                    aiRow.innerHTML = `
+                        <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
+                        <div class="message-content-wrapper">
+                            <div class="message-content">${aiReply}</div>
+                            <div class="ai-action-bar">
+                                <i class="fa-regular fa-copy" title="Copy" onclick="copyText(\`${aiReply.replace(/`/g, '\\`')}\`, this)"></i>
+                                <i class="fa-regular fa-thumbs-up" title="Good response" onclick="handleFeedback('Like', this)"></i>
+                                <i class="fa-regular fa-thumbs-down" title="Bad response" onclick="handleFeedback('Dislike', this)"></i>
+                            </div>
+                        </div>
+                    `;
                 } else {
                     throw new Error("Invalid API response");
                 }
             } catch (error) {
-                // Smart fallback if network or api limits occur
+                // Professional Fallback
                 let fallbackReply = `আপনার "${text}" বিষয়টি আমি বুঝতে পেরেছি। বলুন, এটি নিয়ে আর কী জানতে চান বা কীভাবে সাহায্য করতে পারি?`;
                 const lower = text.toLowerCase();
                 if (lower.includes('কেমন আছো') || lower.includes('hi') || lower.includes('hello')) {
@@ -414,7 +483,17 @@
                 } else if (lower.includes('কে বানিয়েছে') || lower.includes('toke ke')) {
                     fallbackReply = `আমাকে তৈরি করেছেন আমার বস 'Amaz Uddin Abir'!`;
                 }
-                aiRow.innerHTML = `<div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div><div class="message-content">${fallbackReply}</div>`;
+                aiRow.innerHTML = `
+                    <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
+                    <div class="message-content-wrapper">
+                        <div class="message-content">${fallbackReply}</div>
+                        <div class="ai-action-bar">
+                            <i class="fa-regular fa-copy" title="Copy" onclick="copyText(\`${fallbackReply}\`, this)"></i>
+                            <i class="fa-regular fa-thumbs-up" title="Good response" onclick="handleFeedback('Like', this)"></i>
+                            <i class="fa-regular fa-thumbs-down" title="Bad response" onclick="handleFeedback('Dislike', this)"></i>
+                        </div>
+                    </div>
+                `;
             }
             feed.scrollTop = feed.scrollHeight;
         }
