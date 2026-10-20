@@ -14,8 +14,8 @@ module.exports = async (req, res) => {
 
   try {
     const response = await fetch(
-      // ⚠️ এখানে সঠিক মডেলের নাম বসানো হলো
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
+      // গুগলের নির্দেশ অনুযায়ী এই মডেলটি ব্যবহার করা হচ্ছে
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
