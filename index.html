@@ -222,15 +222,16 @@
                 const data = await response.json();
                 removeElement(typingId);
 
-                if (data.reply) {
+                if (response.ok && data.reply) {
                     appendMessage('ai', data.reply);
                 } else {
-                    appendMessage('ai', "দুঃখিত, আমি এই মুহূর্তে উত্তর দিতে পারছি না। (Error: API)");
+                    // এই অংশটুকু এরর ধরার জন্য
+                    appendMessage('ai', "সার্ভার থেকে মেসেজ: " + (data.reply || data.error || "অজানা সমস্যা"));
                 }
 
             } catch (error) {
                 removeElement(typingId);
-                appendMessage('ai', "সার্ভারের সাথে কানেক্ট করা যাচ্ছে না। ইন্টারনেট চেক করুন।");
+                appendMessage('ai', "কানেকশন এরর: " + error.message);
             } finally {
                 sendBtn.disabled = false;
                 userInput.disabled = false;
@@ -246,7 +247,6 @@
             const avatarClass = isUser ? 'user-avatar' : 'ai-avatar';
             const avatarIcon = isUser ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
 
-            // Basic markdown formatting (bold, code)
             let formattedText = text
                 .replace(/```([\s\S]*?)```/g, '<pre style="background:#000;padding:10px;border-radius:5px;overflow-x:auto;margin-top:8px;"><code>$1</code></pre>')
                 .replace(/`([^`]+)`/g, '<code style="background:#444;padding:2px 4px;border-radius:4px;font-size:14px;">$1</code>')
