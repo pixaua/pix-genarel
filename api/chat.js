@@ -12,28 +12,20 @@ module.exports = async (req, res) => {
   const API_KEY = process.env.GEMINI_API_KEY;
   if (!API_KEY) return res.status(500).json({ reply: 'Vercel-এ API Key সেট করা নেই!' });
 
-  // ৮ সেকেন্ড পর রিকোয়েস্ট ক্যানসেল করার সেটআপ
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000);
-
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        signal: controller.signal, // টাইমআউট সিগন্যাল যুক্ত করা হলো
         body: JSON.stringify({ 
             contents: [{ parts: [{ text: message }] }],
-            // প্রম্পট ছোট করা হয়েছে যাতে AI দ্রুত উত্তর দিতে পারে
             systemInstruction: {
                 parts: [{ text: "You are 16 AI. Creator: Amaz Uddin Abir (always call him Sir). If asked about Promi, say she is Sir's wife (always call her Ma'am). Answer in user's language, very concisely." }]
             }
         })
       }
     );
-    
-    clearTimeout(timeoutId); // রেসপন্স আসলে টাইমার বন্ধ করবে
 
     const data = await response.json();
 
@@ -44,11 +36,6 @@ module.exports = async (req, res) => {
     }
 
   } catch (error) {
-    clearTimeout(timeoutId);
-    // যদি ৮ সেকেন্ডে উত্তর না আসে, তবে সুন্দর মেসেজ দেখাবে
-    if (error.name === 'AbortError') {
-        return res.status(504).json({ reply: "⏳ গুগলের সার্ভার অনেক স্লো, ৮ সেকেন্ডেও উত্তর আসেনি। দয়া করে আবার মেসেজ দিন।" });
-    }
     return res.status(500).json({ reply: 'সার্ভার এরর: ' + error.message });
   }
 };
