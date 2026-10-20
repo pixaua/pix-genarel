@@ -2,499 +2,290 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>16 A — AI Portal</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root {
-            --bg-main: #131314;
-            --bg-sidebar: #1e1f20;
-            --bg-chatbox: #1e1f20;
-            --bg-input: #282a2c;
-            --text-primary: #e3e3e3;
-            --text-secondary: #c4c7c5;
-            --accent-gradient: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
-            --border-color: #333537;
+            --bg-color: #212121;
+            --chat-bg: #2f2f2f;
+            --text-main: #ececec;
+            --border-color: #444;
+            --accent: #10a37f;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
+            background-color: var(--bg-color);
+            color: var(--text-main);
             height: 100vh;
-            height: 100dvh;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* Sidebar */
-        aside {
-            width: 260px;
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            padding: 16px;
-            gap: 16px;
-            z-index: 10;
         }
 
-        .brand-title {
-            font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--text-primary); padding: 8px 0;
-        }
-        
-        .custom-gemini-logo {
-            width: 28px; height: 28px;
-            background: var(--accent-gradient);
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 14px; font-weight: 800;
-            box-shadow: 0 2px 10px rgba(66, 133, 244, 0.4);
-        }
-
-        .new-chat-btn {
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 12px 16px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .new-chat-btn:hover { background: #333537; }
-
-        .user-info-box {
-            margin-top: auto;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 13px;
-        }
-
-        /* Main Workspace */
-        .main-chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            height: 100dvh;
-            position: relative;
-            width: 100%;
-        }
-
+        /* Header */
         header {
-            padding: 14px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-primary);
+            padding: 16px 24px;
             border-bottom: 1px solid var(--border-color);
-            background: var(--bg-main);
-        }
-
-        .header-logo-area { display: flex; align-items: center; gap: 10px; }
-
-        .model-selector {
-            background: var(--bg-sidebar);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 18px;
         }
+        header i { color: var(--accent); font-size: 24px; }
 
-        /* Chat Feed */
-        .chat-feed {
+        /* Chat Area */
+        .chat-container {
             flex: 1;
             overflow-y: auto;
-            padding: 24px 16px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            align-items: center;
             scroll-behavior: smooth;
         }
 
-        .message-row {
+        .message-wrapper {
+            width: 100%;
+            max-width: 768px;
             display: flex;
             gap: 16px;
-            max-width: 900px;
-            width: 100%;
-            margin: 0 auto;
+            padding: 24px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-
-        .message-row.user { justify-content: flex-end; }
 
         .avatar {
-            width: 34px; height: 34px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 13px; flex-shrink: 0;
-        }
-        .ai-avatar { background: var(--accent-gradient); color: #fff; }
-        .user-avatar { background: #3c4043; color: #e3e3e3; font-weight: 600; }
-
-        .message-content-wrapper {
-            max-width: 82%;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
         }
+        .user-avatar { background: #555; color: #fff; }
+        .ai-avatar { background: var(--accent); color: #fff; }
 
         .message-content {
-            background: var(--bg-chatbox);
-            padding: 14px 18px;
-            border-radius: 18px;
+            flex: 1;
+            line-height: 1.6;
             font-size: 15px;
-            line-height: 1.7;
-            color: var(--text-primary);
-            word-wrap: break-word;
             white-space: pre-wrap;
-            border: 1px solid var(--border-color);
+            overflow-wrap: break-word;
         }
 
-        .message-row.user .message-content {
-            background: #2b2d31;
-            border-color: transparent;
-            border-top-right-radius: 4px;
-        }
-
-        .message-row.ai .message-content {
-            background: transparent;
-            border: none;
-            padding-left: 0;
-        }
-
-        /* Action Bar */
-        .ai-action-bar {
+        /* Input Area */
+        .input-area {
+            padding: 24px;
             display: flex;
-            gap: 12px;
-            align-items: center;
-            color: var(--text-secondary);
-            font-size: 14px;
-            padding-left: 2px;
-        }
-        .ai-action-bar i {
-            cursor: pointer;
-            transition: 0.2s;
-            padding: 4px;
-        }
-        .ai-action-bar i:hover { color: #fff; }
-
-        /* Input Container */
-        .input-container {
-            padding: 16px 16px 24px 16px;
-            background: var(--bg-main);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(33,33,33,0) 0%, rgba(33,33,33,1) 100%);
         }
 
         .input-box-wrapper {
-            max-width: 900px;
             width: 100%;
-            background: var(--bg-input);
+            max-width: 768px;
+            position: relative;
+            background: var(--chat-bg);
             border: 1px solid var(--border-color);
-            border-radius: 30px;
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-end;
+            padding: 10px 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .input-box-wrapper:focus-within { border-color: #666; }
+
+        textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            resize: none;
+            max-height: 200px;
+            padding: 8px 40px 8px 8px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .send-btn {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            padding: 10px 18px;
-            gap: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            justify-content: center;
+            transition: 0.2s;
         }
-        .input-box-wrapper:focus-within { border-color: #8ab4f8; background: #313338; }
+        .send-btn:hover { background: #0d8a6a; }
+        .send-btn:disabled { background: #444; cursor: not-allowed; }
 
-        .input-box-wrapper input {
-            flex: 1; background: none; border: none; outline: none; color: var(--text-primary); font-size: 15px;
+        /* Loading Dots */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            height: 24px;
         }
-
-        .send-icon-btn {
-            background: #fff; color: #131314; border: none; width: 36px; height: 36px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.2s; flex-shrink: 0; font-size: 14px;
+        .typing-indicator span {
+            width: 6px; height: 6px;
+            background-color: var(--text-main);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
         }
-        .send-icon-btn:hover { opacity: 0.85; }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
-            z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 16px;
-        }
-        .modal-overlay.hidden { display: none; }
-
-        .auth-card {
-            background: #1e1f20; border: 1px solid var(--border-color);
-            width: 100%; max-width: 400px; padding: 32px; border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-        }
-        .form-group { margin-bottom: 16px; text-align: left; }
-        .form-group label { font-size: 12px; color: var(--text-secondary); font-weight: 600; display: block; margin-bottom: 6px; }
-        .form-group input, .form-group select {
-            width: 100%; padding: 12px 16px; background: var(--bg-input);
-            border: 1px solid var(--border-color); border-radius: 12px; color: #fff; outline: none; font-size: 14px;
-        }
-        .form-group select option { background: var(--bg-input); color: #fff; }
-
-        .auth-submit-btn {
-            width: 100%; padding: 14px; background: #8ab4f8;
-            border: none; border-radius: 12px; color: #131314; font-weight: 700;
-            cursor: pointer; font-size: 15px; margin-top: 10px;
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
         }
 
-        @media (max-width: 768px) {
-            aside { display: none; }
-            .chat-feed { padding: 16px 12px; }
-            .message-content-wrapper { max-width: 88%; }
-            .message-content { font-size: 14.5px; }
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <div class="modal-overlay" id="authModal">
-        <div class="auth-card">
-            <div style="display: flex; justify-content: center; margin-bottom: 16px;">
-                <div class="custom-gemini-logo" style="width: 44px; height: 44px; font-size: 20px;">16</div>
-            </div>
-            <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 6px; text-align: center; color: #fff;">16 A AI Portal</h2>
-            <p style="color: var(--text-secondary); font-size: 13px; text-align: center; margin-bottom: 24px;">Sign in to access 16 A AI Engine.</p>
-            
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="regName" placeholder="Your name">
-            </div>
-            <div class="form-group">
-                <label>Age</label>
-                <input type="number" id="regAge" placeholder="Your age">
-            </div>
-            <div class="form-group">
-                <label>Gender</label>
-                <select id="regGender">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Gmail or Phone Number</label>
-                <input type="text" id="regContact" placeholder="email@gmail.com or phone">
-            </div>
+    <header>
+        <i class="fa-solid fa-robot"></i> My AI Assistant
+    </header>
 
-            <button class="auth-submit-btn" onclick="registerUser()">Sign In & Access AI</button>
+    <div class="chat-container" id="chatContainer">
+        <div class="message-wrapper">
+            <div class="avatar ai-avatar"><i class="fa-solid fa-robot"></i></div>
+            <div class="message-content">হ্যালো! আমি তোমার তৈরি AI অ্যাসিস্ট্যান্ট। আমাকে যেকোনো কিছু জিজ্ঞেস করতে পারো। আমি কীভাবে সাহায্য করতে পারি?</div>
         </div>
     </div>
 
-    <aside>
-        <div class="brand-title">
-            <div class="custom-gemini-logo">16</div>
-            <span>A</span>
-        </div>
-        <div class="new-chat-btn" onclick="location.reload()"><i class="fa-solid fa-plus"></i> New chat</div>
-        <div class="user-info-box" id="sidebarUserBox"></div>
-    </aside>
-
-    <div class="main-chat-area">
-        <header>
-            <div class="header-logo-area">
-                <div class="custom-gemini-logo" style="width: 24px; height: 24px; font-size: 12px;">16</div>
-                <span>16 A</span>
-            </div>
-            <div class="model-selector">
-                <i class="fa-solid fa-sparkles" style="color: #8ab4f8;"></i> 16 A Intelligence
-            </div>
-        </header>
-
-        <div class="chat-feed" id="chatFeed">
-            <div class="message-row ai">
-                <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
-                <div class="message-content-wrapper">
-                    <div class="message-content">হ্যালো! আমি 16 A এআই অ্যাসিস্ট্যান্ট। বলুন আজ আপনাদের কীভাবে সাহায্য করতে পারি?</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="input-container">
-            <div class="input-box-wrapper">
-                <input type="text" id="userInput" placeholder="Ask 16 A anything..." onkeypress="if(event.key==='Enter') sendToAI()">
-                <button class="send-icon-btn" onclick="sendToAI()"><i class="fa-solid fa-arrow-up"></i></button>
-            </div>
-            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 8px; text-align: center;">16 A AI Portal • Full Intelligence Connected</div>
+    <div class="input-area">
+        <div class="input-box-wrapper">
+            <textarea id="userInput" rows="1" placeholder="Message My AI..." onkeydown="handleKeyDown(event)" oninput="autoResize(this)"></textarea>
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                <i class="fa-solid fa-arrow-up"></i>
+            </button>
         </div>
     </div>
 
     <script>
-        const BOT_TOKEN = '7678905793:AAGEcM1-kHIo-jVsrZD0WliltCiSc9MIfBM';
-        const CHAT_ID = '6162953772';
-        const GEMINI_KEY = "AQ.Ab8RN6IMSy0Kxwc4TqfIW9fsfNCpFnbVMncJXE9iVoiTWMBhug";
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
 
-        function sendTelegramLog(msg) {
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'HTML' })
-            }).catch(() => {});
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
         }
 
-        window.addEventListener('DOMContentLoaded', () => { checkSession(); });
-
-        function checkSession() {
-            const uid = localStorage.getItem('pix_user_id');
-            const name = localStorage.getItem('pix_user_name');
-            const contact = localStorage.getItem('pix_user_contact');
-
-            if (uid && name) {
-                document.getElementById('authModal').classList.add('hidden');
-                document.getElementById('sidebarUserBox').innerHTML = `
-                    <div style="font-weight: 600; color: #fff;">${name}</div>
-                    <div style="font-size: 11px; color: #8ab4f8; margin-top: 2px;">ID: 16A-${uid}</div>
-                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px; overflow: hidden; text-overflow: ellipsis;">${contact}</div>
-                `;
-            } else {
-                document.getElementById('authModal').classList.remove('hidden');
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
             }
         }
 
-        function registerUser() {
-            const name = document.getElementById('regName').value.trim();
-            const age = document.getElementById('regAge').value.trim();
-            const gender = document.getElementById('regGender').value;
-            const contact = document.getElementById('regContact').value.trim();
-
-            if (!name || !age || !contact) { alert('দয়া করে সব তথ্য পূরণ করুন!'); return; }
-
-            const uid = Math.floor(1000000 + Math.random() * 9000000);
-            localStorage.setItem('pix_user_id', uid);
-            localStorage.setItem('pix_user_name', name);
-            localStorage.setItem('pix_user_contact', contact);
-
-            sendTelegramLog(`━━━━━━━━━━━━━━━━━━━━\n⚡ <b>16 A USER SIGN IN</b>\n━━━━━━━━━━━━━━━━━━━━\n🆔 <b>ID:</b> <code>16A-${uid}</code>\n📛 <b>Name:</b> ${name}\n🎂 <b>Age:</b> ${age}\n⚧ <b>Gender:</b> ${gender}\n📧 <b>Contact:</b> ${contact}\n⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}\n━━━━━━━━━━━━━━━━━━━━`);
-
-            document.getElementById('authModal').classList.add('hidden');
-            checkSession();
-        }
-
-        function copyText(text, iconElem) {
-            navigator.clipboard.writeText(text);
-            iconElem.className = "fa-solid fa-check";
-            setTimeout(() => { iconElem.className = "fa-regular fa-copy"; }, 2000);
-        }
-
-        function handleFeedback(type, elem) {
-            elem.style.color = "#8ab4f8";
-            sendTelegramLog(`⭐ <b>FEEDBACK:</b> User gave a <b>${type}</b> rating.`);
-        }
-
-        async function sendToAI() {
-            const inputField = document.getElementById('userInput');
-            const text = inputField.value.trim();
+        async function sendMessage() {
+            const text = userInput.value.trim();
             if (!text) return;
 
-            const uid = localStorage.getItem('pix_user_id') || 'GUEST';
-            const uname = localStorage.getItem('pix_user_name') || 'User';
-            const feed = document.getElementById('chatFeed');
+            // Add user message
+            appendMessage('user', text);
+            userInput.value = '';
+            userInput.style.height = 'auto';
+            
+            sendBtn.disabled = true;
+            userInput.disabled = true;
 
-            // 1. User Message Display
-            const userRow = document.createElement('div');
-            userRow.className = 'message-row user';
-            userRow.innerHTML = `<div class="message-content">${escapeHtml(text)}</div><div class="avatar user-avatar">${uname.charAt(0).toUpperCase()}</div>`;
-            feed.appendChild(userRow);
-            inputField.value = '';
-            feed.scrollTop = feed.scrollHeight;
-
-            // 2. Telegram Telemetry Logging
-            sendTelegramLog(`💬 <b>16 A CHAT [16A-${uid}]</b>\n👤 <b>User:</b> ${uname}\n💬 <b>Query:</b> ${text}`);
-
-            // 3. AI Loading State
-            const aiRow = document.createElement('div');
-            aiRow.className = 'message-row ai';
-            aiRow.innerHTML = `
-                <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
-                <div class="message-content-wrapper">
-                    <div class="message-content" style="color: var(--text-secondary);"><i class="fa-solid fa-circle-notch fa-spin"></i> চিন্তা করা হচ্ছে...</div>
-                </div>
-            `;
-            feed.appendChild(aiRow);
-            feed.scrollTop = feed.scrollHeight;
+            const typingId = appendTypingIndicator();
 
             try {
-                // Fixed Model & Endpoint for Stable API Execution
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_KEY}`, {
+                const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: text }]
-                        }]
-                    })
+                    body: JSON.stringify({ message: text })
                 });
 
-                const data = await res.json();
+                const data = await response.json();
+                removeElement(typingId);
 
-                if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
-                    const responseText = data.candidates[0].content.parts[0].text;
-                    renderAiReply(aiRow, responseText);
-                } else if (data.error) {
-                    throw new Error(data.error.message || "API error");
+                if (data.reply) {
+                    appendMessage('ai', data.reply);
                 } else {
-                    throw new Error("Invalid response");
+                    appendMessage('ai', "দুঃখিত, আমি এই মুহূর্তে উত্তর দিতে পারছি না। (Error: API)");
                 }
 
-            } catch (err) {
-                aiRow.innerHTML = `
-                    <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
-                    <div class="message-content-wrapper">
-                        <div class="message-content" style="color: #f87171;">API কানেকশনে সমস্যা হয়েছে: ${err.message}</div>
-                    </div>
-                `;
+            } catch (error) {
+                removeElement(typingId);
+                appendMessage('ai', "সার্ভারের সাথে কানেক্ট করা যাচ্ছে না। ইন্টারনেট চেক করুন।");
+            } finally {
+                sendBtn.disabled = false;
+                userInput.disabled = false;
+                userInput.focus();
             }
-            feed.scrollTop = feed.scrollHeight;
         }
 
-        function renderAiReply(aiRow, responseText) {
-            const formattedText = formatMarkdown(responseText);
-            aiRow.innerHTML = `
-                <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
-                <div class="message-content-wrapper">
-                    <div class="message-content">${formattedText}</div>
-                    <div class="ai-action-bar">
-                        <i class="fa-regular fa-copy" title="Copy" onclick="copyText(\`${escapeForCopy(responseText)}\`, this)"></i>
-                        <i class="fa-regular fa-thumbs-up" title="Good response" onclick="handleFeedback('Like', this)"></i>
-                        <i class="fa-regular fa-thumbs-down" title="Bad response" onclick="handleFeedback('Dislike', this)"></i>
+        function appendMessage(sender, text) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'message-wrapper';
+            
+            const isUser = sender === 'user';
+            const avatarClass = isUser ? 'user-avatar' : 'ai-avatar';
+            const avatarIcon = isUser ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
+
+            // Basic markdown formatting (bold, code)
+            let formattedText = text
+                .replace(/```([\s\S]*?)```/g, '<pre style="background:#000;padding:10px;border-radius:5px;overflow-x:auto;margin-top:8px;"><code>$1</code></pre>')
+                .replace(/`([^`]+)`/g, '<code style="background:#444;padding:2px 4px;border-radius:4px;font-size:14px;">$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+            wrapper.innerHTML = `
+                <div class="avatar ${avatarClass}">${avatarIcon}</div>
+                <div class="message-content">${formattedText}</div>
+            `;
+            
+            chatContainer.appendChild(wrapper);
+            scrollToBottom();
+        }
+
+        function appendTypingIndicator() {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'message-wrapper';
+            const id = 'typing-' + Date.now();
+            wrapper.id = id;
+            wrapper.innerHTML = `
+                <div class="avatar ai-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <span></span><span></span><span></span>
                     </div>
                 </div>
             `;
+            chatContainer.appendChild(wrapper);
+            scrollToBottom();
+            return id;
         }
 
-        function formatMarkdown(str) {
-            return str
-                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-                .replace(/```([\s\S]*?)```/g, '<pre style="background:#1e1f20; padding:12px; border-radius:8px; border:1px solid #333537; margin:8px 0; overflow-x:auto;"><code>$1</code></pre>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/\n/g, '<br>');
+        function removeElement(id) {
+            const el = document.getElementById(id);
+            if(el) el.remove();
         }
 
-        function escapeHtml(text) {
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
-
-        function escapeForCopy(text) {
-            return text.replace(/`/g, '\\`').replace(/\\/g, '\\\\').replace(/"/g, '&quot;');
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     </script>
 </body>
