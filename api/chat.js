@@ -15,8 +15,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ⚠️ এখানে মডেলের নাম badle 'gemini-2.5-flash' করা হয়েছে
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
+    // সবচেয়ে স্ট্যাবল মডেল ব্যবহার করা হচ্ছে
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
