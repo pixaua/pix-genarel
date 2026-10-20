@@ -12,36 +12,31 @@ module.exports = async (req, res) => {
   const API_KEY = process.env.GEMINI_API_KEY;
   if (!API_KEY) return res.status(500).json({ reply: 'Vercel-এ API Key সেট করা নেই!' });
 
-  // একাধিক মডেল ট্রাই করবে, যদি একটাতে ভিড় থাকে
-  const modelsToTry = ["gemini-3.8-flash", "gemini-1.5-flash-latest", "gemini-pro"];
-  let lastError = "";
-
-  for (const model of modelsToTry) {
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: message }] }] })
-        }
-      );
-
-      const data = await response.json();
-
-      // যদি সফলভাবে উত্তর পাওয়া যায়
-      if (response.ok && data.candidates && data.candidates.length > 0) {
-        return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            contents: [{ parts: [{ text: message }] }],
+            // এখানে AI-এর কাস্টম ব্র্যান্ডিং ও রুলস আপডেট করা হলো
+            systemInstruction: {
+                parts: [{ text: "You are '16 AI', a smart and helpful AI assistant. Your creator is Amaz Uddin Abir. You MUST always address Amaz Uddin Abir with utmost respect, specifically using the title 'Sir'. If anyone asks about Promi, you must state that she is Abir's wife, and you MUST always address her with utmost respect, specifically using the title 'Ma'am' or 'ম্যাডাম'. Answer in the language the user speaks (Bengali or English). Keep your answers concise and helpful to avoid timeouts." }]
+            }
+        })
       }
-      
-      // যদি এরর হয়, তবে এরর মেসেজটা সেভ করে রাখবে
-      lastError = data.error?.message || "Unknown error";
+    );
 
-    } catch (error) {
-      lastError = error.message;
+    const data = await response.json();
+
+    if (response.ok && data.candidates && data.candidates.length > 0) {
+      return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
+    } else {
+      return res.status(response.status).json({ reply: "গুগল এরর: " + JSON.stringify(data.error?.message || data) });
     }
-  }
 
-  // যদি সব মডেল ব্যস্ত থাকে, তবে শেষ এররটা দেখাবে
-  return res.status(500).json({ reply: "গুগলের সার্ভার বর্তমানে ব্যস্ত। ২ মিনিট পর আবার চেষ্টা করুন। (বিস্তারিত: " + lastError + ")" });
+  } catch (error) {
+    return res.status(500).json({ reply: 'সার্ভার এরর: ' + error.message });
+  }
 };
