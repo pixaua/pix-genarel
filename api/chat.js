@@ -12,26 +12,36 @@ module.exports = async (req, res) => {
   const API_KEY = process.env.GEMINI_API_KEY;
   if (!API_KEY) return res.status(500).json({ reply: 'Vercel-এ API Key সেট করা নেই!' });
 
-  try {
-    // সরাসরি একবার রিকোয়েস্ট পাঠাচ্ছি, যাতে ১০ সেকেন্ডের মধ্যে শেষ হয়ে যায়
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: message }] }] })
+  // একাধিক মডেল ট্রাই করবে, যদি একটাতে ভিড় থাকে
+  const modelsToTry = ["gemini-3.8-flash", "gemini-1.5-flash-latest", "gemini-pro"];
+  let lastError = "";
+
+  for (const model of modelsToTry) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: message }] }] })
+        }
+      );
+
+      const data = await response.json();
+
+      // যদি সফলভাবে উত্তর পাওয়া যায়
+      if (response.ok && data.candidates && data.candidates.length > 0) {
+        return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
       }
-    );
+      
+      // যদি এরর হয়, তবে এরর মেসেজটা সেভ করে রাখবে
+      lastError = data.error?.message || "Unknown error";
 
-    const data = await response.json();
-
-    if (response.ok && data.candidates && data.candidates.length > 0) {
-      return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
-    } else {
-      return res.status(response.status).json({ reply: "গুগল এরর: " + JSON.stringify(data.error?.message || data) });
+    } catch (error) {
+      lastError = error.message;
     }
-
-  } catch (error) {
-    return res.status(500).json({ reply: 'সার্ভার এরর: ' + error.message });
   }
+
+  // যদি সব মডেল ব্যস্ত থাকে, তবে শেষ এররটা দেখাবে
+  return res.status(500).json({ reply: "গুগলের সার্ভার বর্তমানে ব্যস্ত। ২ মিনিট পর আবার চেষ্টা করুন। (বিস্তারিত: " + lastError + ")" });
 };
