@@ -23,8 +23,9 @@ module.exports = async (req, res) => {
   }
 
   try {
+    // ⚠️ এখানে মডেলের নাম gemini-3.8-flash করা হয়েছে
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -39,7 +40,7 @@ module.exports = async (req, res) => {
     if (data.candidates && data.candidates.length > 0) {
       return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
     } else {
-      // গুগলের আসল এরর মেসেজটি ফ্রন্টএন্ডে পাঠানো হচ্ছে
+      // যদি আরও কোনো এরর থাকে, তবে সেটা এখানে দেখাবে
       return res.status(500).json({ reply: "গুগল এরর: " + JSON.stringify(data.error || data) });
     }
   } catch (error) {
