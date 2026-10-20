@@ -14,13 +14,13 @@ module.exports = async (req, res) => {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+      // ⚠️ এখানে মডেলের নাম আপডেট করা হয়েছে
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             contents: [{ parts: [{ text: message }] }],
-            // এখানে AI-এর কাস্টম ব্র্যান্ডিং ও রুলস আপডেট করা হলো
             systemInstruction: {
                 parts: [{ text: "You are '16 AI', a smart and helpful AI assistant. Your creator is Amaz Uddin Abir. You MUST always address Amaz Uddin Abir with utmost respect, specifically using the title 'Sir'. If anyone asks about Promi, you must state that she is Abir's wife, and you MUST always address her with utmost respect, specifically using the title 'Ma'am' or 'ম্যাডাম'. Answer in the language the user speaks (Bengali or English). Keep your answers concise and helpful to avoid timeouts." }]
             }
@@ -33,6 +33,7 @@ module.exports = async (req, res) => {
     if (response.ok && data.candidates && data.candidates.length > 0) {
       return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
     } else {
+      // যদি এরর হয়, তবে গুগলের আসল কারণটা দেখাবে
       return res.status(response.status).json({ reply: "গুগল এরর: " + JSON.stringify(data.error?.message || data) });
     }
 
