@@ -22,9 +22,9 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // স্ট্যান্ডার্ড এবং সবচেয়ে স্ট্যাবল মডেল ব্যবহার করা হচ্ছে
+    // ⚠️ এখানে নতুন মডেলের নাম বসানো হয়েছে
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -39,12 +39,9 @@ module.exports = async (req, res) => {
     if (data.candidates && data.candidates.length > 0) {
       return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
     } else {
-      // গুগল থেকে আসা আসল এরর মেসেজ
-      console.error("Gemini Error:", data); 
       return res.status(500).json({ reply: "গুগল এরর: " + JSON.stringify(data.error || data) });
     }
   } catch (error) {
-    console.error("Server Error:", error);
     return res.status(500).json({ reply: 'সার্ভার এরর: ' + error.message });
   }
 };
