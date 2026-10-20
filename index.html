@@ -179,7 +179,7 @@
             padding-left: 0;
         }
 
-        /* Gemini Action Bar */
+        /* Action Bar */
         .ai-action-bar {
             display: flex;
             gap: 12px;
@@ -323,7 +323,7 @@
             <div class="message-row ai">
                 <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
                 <div class="message-content-wrapper">
-                    <div class="message-content">হ্যালো! আমি 16 A এআই অ্যাসিস্ট্যান্ট। বলুন আজ আপনাকে কীভাবে সাহায্য করতে পারি?</div>
+                    <div class="message-content">হ্যালো! আমি 16 A এআই অ্যাসিস্ট্যান্ট। বলুন আজ আপনাদের কীভাবে সাহায্য করতে পারি?</div>
                 </div>
             </div>
         </div>
@@ -432,8 +432,8 @@
             feed.scrollTop = feed.scrollHeight;
 
             try {
-                // Call Google Gemini REST API v1 Endpoint (Guaranteed Work)
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
+                // Fixed Model & Endpoint for Stable API Execution
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
