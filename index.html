@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>16 AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -13,10 +13,11 @@
             --text-main: #e3e3e3;
             --text-sub: #8e918f;
             --border-color: #444746;
-            --accent-gradient: linear-gradient(90deg, #4285f4, #9b72cb, #d96570);
+            --accent-gradient: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
+            --glass-bg: rgba(30, 31, 32, 0.7);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Google Sans', 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
 
         body {
             background-color: var(--bg-color);
@@ -27,59 +28,68 @@
             overflow: hidden;
         }
 
-        /* --- Auth Styles --- */
+        /* --- Modern Auth Styles --- */
         #auth-wrapper {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 9999;
+            background: radial-gradient(circle at top left, #1a1c29, #131314);
+            z-index: 9999;
             display: flex; justify-content: center; align-items: center;
             padding: 20px;
         }
         .auth-box {
-            width: 100%; max-width: 400px;
-            background: var(--chat-bg);
-            padding: 40px 30px;
+            width: 100%; max-width: 420px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 45px 35px;
             border-radius: 24px;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             text-align: center;
+            animation: fadeIn 0.5s ease-out;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
         .auth-logo {
-            font-size: 48px; font-weight: 700; margin-bottom: 20px;
+            font-size: 48px; font-weight: 700; margin-bottom: 10px;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .auth-input {
-            width: 100%; padding: 15px; margin-bottom: 15px;
-            background: var(--bg-color); border: 1px solid var(--border-color);
-            border-radius: 12px; color: var(--text-main); font-size: 16px;
-            outline: none;
+            width: 100%; padding: 16px; margin-bottom: 16px;
+            background: rgba(0,0,0,0.4); border: 1px solid var(--border-color);
+            border-radius: 12px; color: var(--text-main); font-size: 15px;
+            outline: none; transition: 0.3s;
         }
-        .auth-input:focus { border-color: #8ab4f8; }
+        .auth-input:focus { border-color: #8ab4f8; background: rgba(0,0,0,0.6); }
         .auth-btn {
-            width: 100%; padding: 15px; border-radius: 50px;
+            width: 100%; padding: 16px; border-radius: 50px;
             background: #8ab4f8; color: #000; font-weight: 600; font-size: 16px;
-            border: none; cursor: pointer; transition: 0.2s;
+            border: none; cursor: pointer; transition: 0.2s; margin-top: 10px;
         }
-        .auth-btn:hover { background: #a0c3ff; }
+        .auth-btn:hover { background: #a0c3ff; transform: scale(1.02); }
         .hidden { display: none !important; }
 
         /* --- App Styles --- */
         header {
-            padding: 16px 20px;
-            display: flex; align-items: center; gap: 10px;
-            font-size: 20px; font-weight: 500;
+            padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 22px; font-weight: 600;
             border-bottom: 1px solid var(--border-color);
+            background: var(--bg-color);
         }
         .logo-text {
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-weight: 700;
+            font-weight: 700; letter-spacing: -0.5px;
         }
 
         .chat-container {
             flex: 1; overflow-y: auto; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
+            scroll-behavior: smooth;
         }
 
         .message-wrapper {
@@ -87,27 +97,52 @@
             display: flex; gap: 16px; padding: 20px 0;
         }
         .avatar {
-            width: 32px; height: 32px; border-radius: 50%;
+            width: 36px; height: 36px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; font-size: 14px;
+            flex-shrink: 0; font-size: 16px;
         }
-        .user-avatar { background: #555; color: #fff; }
+        .user-avatar { background: #333; color: #fff; }
         .ai-avatar { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
         .ai-avatar i { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
+        .message-content-wrapper {
+            flex: 1; display: flex; flex-direction: column; gap: 8px;
+        }
         .message-content {
-            flex: 1; line-height: 1.6; font-size: 16px;
+            line-height: 1.6; font-size: 16px;
             word-wrap: break-word; white-space: pre-wrap;
         }
         
-        /* Markdown Styles */
-        .message-content pre { background: #000; padding: 12px; border-radius: 8px; overflow-x: auto; margin: 10px 0; }
-        .message-content code { font-family: monospace; background: #333; padding: 2px 6px; border-radius: 4px; }
+        /* Message Action Buttons (Copy, Listen) */
+        .msg-actions {
+            display: flex; gap: 12px; margin-top: 5px; opacity: 0; transition: 0.3s;
+        }
+        .message-wrapper:hover .msg-actions { opacity: 1; }
+        .action-btn {
+            background: transparent; border: none; color: var(--text-sub);
+            cursor: pointer; font-size: 14px; transition: 0.2s; padding: 4px;
+        }
+        .action-btn:hover { color: #fff; }
+        
+        /* Suggestion Chips */
+        .suggestions {
+            width: 100%; max-width: 800px;
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+        .suggestions::-webkit-scrollbar { display: none; }
+        .chip {
+            background: var(--chat-bg); border: 1px solid var(--border-color);
+            color: var(--text-main); padding: 8px 16px; border-radius: 20px;
+            font-size: 14px; cursor: pointer; white-space: nowrap;
+            transition: 0.2s;
+        }
+        .chip:hover { background: #333; border-color: #555; }
 
         /* Input Area */
         .input-area {
             padding: 15px 20px 25px 20px;
-            display: flex; justify-content: center;
+            display: flex; flex-direction: column; align-items: center;
             background: var(--bg-color);
         }
         .input-box {
@@ -117,21 +152,22 @@
             padding: 8px 10px 8px 20px;
             display: flex; align-items: center; gap: 10px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
-        .input-box:focus-within { border-color: #555; }
+        .input-box:focus-within { border-color: #8ab4f8; }
         textarea {
             flex: 1; background: transparent; border: none; color: var(--text-main);
             font-size: 16px; resize: none; outline: none; max-height: 120px; padding: 8px 0;
             font-family: inherit;
         }
         .send-btn {
-            background: #444; color: #fff; border: none;
-            width: 36px; height: 36px; border-radius: 50%;
+            background: #8ab4f8; color: #000; border: none;
+            width: 40px; height: 40px; border-radius: 50%;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: 0.2s;
         }
-        .send-btn:hover { background: #666; }
-        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .send-btn:hover { background: #a0c3ff; transform: scale(1.05); }
+        .send-btn:disabled { background: #444; color: #888; cursor: not-allowed; transform: none; }
 
         /* Typing Animation */
         .typing { display: flex; gap: 4px; align-items: center; height: 24px; }
@@ -145,55 +181,66 @@
 
         /* Mobile Adjustments */
         @media (max-width: 600px) {
-            .message-wrapper { gap: 12px; padding: 12px 0; }
+            .message-wrapper { gap: 12px; padding: 16px 0; }
             .message-content { font-size: 15px; }
-            header { padding: 12px 16px; font-size: 18px; }
-            .input-area { padding: 10px 15px 15px 15px; }
+            header { padding: 16px; font-size: 20px; }
+            .input-area { padding: 10px 15px 20px 15px; }
+            .msg-actions { opacity: 1; } /* Mobile e hover na thakay always show */
         }
     </style>
 </head>
 <body>
 
-    <!-- Auth Screen (Login System) -->
+    <!-- Modern Auth Screen -->
     <div id="auth-wrapper">
         <div class="auth-box">
-            <!-- Step 1: Email -->
+            <!-- Step 1 -->
             <div id="step-email">
                 <div class="auth-logo">16 AI</div>
-                <p style="color: var(--text-sub); margin-bottom: 25px; font-size: 14px;">Sign in to continue</p>
-                <input type="text" id="reg-name" class="auth-input" placeholder="Your Name">
+                <p style="color: var(--text-sub); margin-bottom: 25px; font-size: 15px;">Welcome to the future. Sign in to continue.</p>
+                <input type="text" id="reg-name" class="auth-input" placeholder="Enter your name">
                 <input type="email" id="reg-email" class="auth-input" placeholder="Email address">
                 <button class="auth-btn" onclick="requestOTP()">Continue</button>
             </div>
 
-            <!-- Step 2: OTP -->
+            <!-- Step 2 -->
             <div id="step-otp" class="hidden">
                 <div class="auth-logo">16</div>
-                <h2 style="margin-bottom: 10px; font-size: 22px;">Enter OTP</h2>
-                <p style="color: var(--text-sub); margin-bottom: 20px; font-size: 14px;">
-                    We sent a code to <b id="display-email" style="color:#fff;"></b>
+                <h2 style="margin-bottom: 10px; font-size: 24px; font-weight: 600;">Security Check</h2>
+                <p style="color: var(--text-sub); margin-bottom: 25px; font-size: 14px;">
+                    OTP sent to <b id="display-email" style="color:#fff;"></b>
                 </p>
                 <input type="text" id="otp-input" class="auth-input" placeholder="123456" maxlength="6" style="text-align: center; letter-spacing: 8px; font-size: 24px; font-weight: 600;">
                 <p style="color: var(--text-sub); font-size: 12px; margin-bottom: 15px;">(Demo: Enter any 6 digits)</p>
-                <button class="auth-btn" onclick="verifyOTP()">Verify</button>
+                <button class="auth-btn" onclick="verifyOTP()">Verify & Enter</button>
             </div>
         </div>
     </div>
 
     <!-- Main App -->
     <header>
-        <span class="logo-text" style="font-size: 24px;">16 AI</span>
+        <span class="logo-text">16 AI</span>
+        <i class="fa-solid fa-bolt" style="color: #8ab4f8; font-size: 18px;"></i>
     </header>
 
     <div class="chat-container" id="chat-container">
-        <!-- Welcome Message -->
         <div class="message-wrapper">
             <div class="avatar ai-avatar"><i class="fa-solid fa-sparkles"></i></div>
-            <div class="message-content" id="welcome-msg">Hello! How can I help you today?</div>
+            <div class="message-content-wrapper">
+                <div class="message-content" id="welcome-msg">Hello! I am 16 AI, created by Amaz Uddin Abir. How can I help you today?</div>
+            </div>
         </div>
     </div>
 
     <div class="input-area">
+        <!-- Suggestion Chips -->
+        <div class="suggestions" id="suggestions-box">
+            <div class="chip" onclick="sendSuggestion('Who are you?')">Who are you?</div>
+            <div class="chip" onclick="sendSuggestion('Who created you?')">Who created you?</div>
+            <div class="chip" onclick="sendSuggestion('Tell me about Promi')">Tell me about Promi</div>
+            <div class="chip" onclick="sendSuggestion('Write a JavaScript code')">Write Code</div>
+        </div>
+
         <div class="input-box">
             <textarea id="user-input" rows="1" placeholder="Ask 16 AI..." oninput="autoResize(this)" onkeydown="handleKeyDown(event)"></textarea>
             <button class="send-btn" id="send-btn" onclick="sendMessage()">
@@ -211,7 +258,7 @@
             const savedName = localStorage.getItem('ai_user_name');
             if (savedName) {
                 authWrapper.classList.add('hidden');
-                document.getElementById('welcome-msg').innerText = `Hello ${savedName}! How can I help you today?`;
+                document.getElementById('welcome-msg').innerText = `Hello ${savedName}! I am 16 AI. How can I help you today?`;
             }
         };
 
@@ -232,13 +279,19 @@
 
             localStorage.setItem('ai_user_name', tempUser.name);
             authWrapper.classList.add('hidden');
-            document.getElementById('welcome-msg').innerText = `Hello ${tempUser.name}! How can I help you today?`;
+            document.getElementById('welcome-msg').innerText = `Hello ${tempUser.name}! I am 16 AI. How can I help you today?`;
         }
 
         // --- Chat Logic ---
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
+        const suggestionsBox = document.getElementById('suggestions-box');
+
+        function sendSuggestion(text) {
+            userInput.value = text;
+            sendMessage();
+        }
 
         function autoResize(textarea) {
             textarea.style.height = 'auto';
@@ -260,6 +313,7 @@
             userInput.value = '';
             userInput.style.height = 'auto';
             sendBtn.disabled = true;
+            if(suggestionsBox) suggestionsBox.style.display = 'none'; // Hide suggestions after first msg
 
             const typingId = appendTypingIndicator();
 
@@ -275,7 +329,7 @@
                 try {
                     data = JSON.parse(textData);
                 } catch (e) {
-                    throw new Error("সার্ভার টাইমআউট হয়েছে। আবার চেষ্টা করুন।");
+                    throw new Error("সার্ভার টাইমআউট হয়েছে বা রেসপন্স দিতে পারছে না।");
                 }
 
                 removeElement(typingId);
@@ -303,14 +357,29 @@
             const avatarClass = isUser ? 'user-avatar' : 'ai-avatar';
             const avatarIcon = isUser ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-sparkles"></i>';
 
+            // Markdown Formatting
             let formattedText = text
-                .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/```([\s\S]*?)```/g, '<pre style="background:#000;padding:12px;border-radius:8px;overflow-x:auto;margin:10px 0;"><code>$1</code></pre>')
+                .replace(/`([^`]+)`/g, '<code style="background:#333;padding:2px 6px;border-radius:4px;">$1</code>')
                 .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+            // Action Buttons (Copy & Listen)
+            let actionBtns = '';
+            if (!isUser) {
+                actionBtns = `
+                    <div class="msg-actions">
+                        <button class="action-btn" onclick="copyText(this)" title="Copy"><i class="fa-regular fa-copy"></i> Copy</button>
+                        <button class="action-btn" onclick="speakText(this)" title="Listen"><i class="fa-solid fa-volume-high"></i> Listen</button>
+                    </div>
+                `;
+            }
 
             wrapper.innerHTML = `
                 <div class="avatar ${avatarClass}">${avatarIcon}</div>
-                <div class="message-content">${formattedText}</div>
+                <div class="message-content-wrapper">
+                    <div class="message-content" data-raw="${text.replace(/"/g, '&quot;')}">${formattedText}</div>
+                    ${actionBtns}
+                </div>
             `;
             
             chatContainer.appendChild(wrapper);
@@ -336,6 +405,47 @@
         function removeElement(id) {
             const el = document.getElementById(id);
             if(el) el.remove();
+        }
+
+        // --- TTS (Listen) Logic ---
+        function speakText(btnElement) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop previous
+                const msgContent = btnElement.closest('.message-content-wrapper').querySelector('.message-content');
+                const textToSpeak = msgContent.getAttribute('data-raw');
+                
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                
+                // Change icon while speaking
+                const icon = btnElement.querySelector('i');
+                const originalClass = icon.className;
+                
+                utterance.onstart = () => { icon.className = 'fa-solid fa-spinner fa-spin'; };
+                utterance.onend = () => { icon.className = originalClass; };
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("আপনার ব্রাউজারটি Text-to-Speech সাপোর্ট করে না।");
+            }
+        }
+
+        // --- Copy Logic ---
+        function copyText(btnElement) {
+            const msgContent = btnElement.closest('.message-content-wrapper').querySelector('.message-content');
+            const textToCopy = msgContent.getAttribute('data-raw');
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const icon = btnElement.querySelector('i');
+                const originalClass = icon.className;
+                const originalText = btnElement.innerHTML;
+                
+                btnElement.innerHTML = '<i class="fa-solid fa-check" style="color:#8ab4f8;"></i> Copied!';
+                setTimeout(() => { btnElement.innerHTML = originalText; }, 2000);
+            }).catch(err => {
+                alert("কপি করা যায়নি!");
+            });
         }
     </script>
 </body>
